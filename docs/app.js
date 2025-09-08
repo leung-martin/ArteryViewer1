@@ -1,7 +1,7 @@
 'use strict';
 
 //write to console version 0.1
-console.log('Version 0.1');
+console.log('Version 0.2');
 
 // Set up scene, camera, and renderer
 const scene = new THREE.Scene();
@@ -123,15 +123,20 @@ function onWindowResize() {
 const fbxLoader = new THREE.FBXLoader();
 fbxLoader.load('narizBoca.fbx', function (object) {
     object.position.set(0, 0, 0); // Adjust position as needed
-    object.scale.set(100.0, 100.0, 100.0); // Adjust scale as needed
+    object.scale.set(10.0, 10.0, 10.0); // Adjust scale as needed
 
     object.traverse(function (child) {
+        console.log('Traversing child:', child.type, child.name || '(no name)', child);
+
         if (child.isMesh) {
+            console.log('Found mesh:', child.name || '(no name)', '— setting material to light grey and translucent');
             child.material = new THREE.MeshPhongMaterial({
                 color: 0xcccccc, // light grey
                 transparent: true,
                 opacity: 0.5     // translucent
             });
+        } else {
+            console.log('Not a mesh:', child.type, child.name || '(no name)');
         }
     });
 
