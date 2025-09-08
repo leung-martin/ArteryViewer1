@@ -117,6 +117,16 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+// FBX Loader
+const fbxLoader = new THREE.FBXLoader();
+fbxLoader.load('narizBoca.fbx', function (object) {
+    object.position.set(0, 0, 0); // Adjust position as needed
+    object.scale.set(100.0, 100.0, 100.0); // Adjust scale as needed
+    scene.add(object);
+}, undefined, function (error) {
+    console.error('Error loading FBX:', error);
+});
+
 // Animation loop
 function animate() {
     requestAnimationFrame(animate);
