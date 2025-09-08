@@ -1,5 +1,8 @@
 'use strict';
 
+//write to console version 0.1
+console.log('Version 0.1');
+
 // Set up scene, camera, and renderer
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x2a2a2a);
@@ -120,7 +123,7 @@ function onWindowResize() {
 const fbxLoader = new THREE.FBXLoader();
 fbxLoader.load('narizBoca.fbx', function (object) {
     object.position.set(0, 0, 0); // Adjust position as needed
-    object.scale.set(100.0, 100.0, 100.0); // Adjust scale as needed
+    object.scale.set(1.0, 1.0, 1.0); // Adjust scale as needed
     scene.add(object);
 }, undefined, function (error) {
     console.error('Error loading FBX:', error);
