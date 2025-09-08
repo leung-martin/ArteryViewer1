@@ -1,7 +1,7 @@
 'use strict';
 
 //write to console version 0.1
-console.log('Version 0.2');
+console.log('Version 0.3');
 
 // Set up scene, camera, and renderer
 const scene = new THREE.Scene();
@@ -39,24 +39,44 @@ function createArteries() {
     if (arteryBlue) scene.remove(arteryBlue);
     if (arteryPurple) scene.remove(arteryPurple);
 
-    const arteryGeometry = new THREE.CylinderGeometry(arteryRadius, arteryRadius, arteryHeight, arterySegments);
+    // Example vein paths
+    const pinkPath = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-2.2, 0, arteryZ),
+        new THREE.Vector3(-2.2, 1, arteryZ + 2),
+        new THREE.Vector3(-2.2, -1, arteryZ + 4),
+        new THREE.Vector3(-2.2, 0, arteryZ + 6)
+    ]);
+    const bluePath = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(0, 0, arteryZ),
+        new THREE.Vector3(0.5, 1, arteryZ + 2),
+        new THREE.Vector3(-0.5, -1, arteryZ + 4),
+        new THREE.Vector3(0, 0, arteryZ + 6)
+    ]);
+    const purplePath = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(2.2, 0, arteryZ),
+        new THREE.Vector3(2.2, 1, arteryZ + 2),
+        new THREE.Vector3(2.2, -1, arteryZ + 4),
+        new THREE.Vector3(2.2, 0, arteryZ + 6)
+    ]);
 
-    arteryPink = new THREE.Mesh(arteryGeometry, pinkMaterial);
-    arteryPink.position.x = -horizontalSpacing;
-    arteryPink.position.y = 0;
-    arteryPink.position.z = arteryZ;
+    // TubeGeometry for veins
+    const veinSegments = 64;
+    arteryPink = new THREE.Mesh(
+        new THREE.TubeGeometry(pinkPath, veinSegments, arteryRadius, arterySegments, false),
+        pinkMaterial
+    );
     scene.add(arteryPink);
 
-    arteryBlue = new THREE.Mesh(arteryGeometry, blueMaterial);
-    arteryBlue.position.x = 0;
-    arteryBlue.position.y = 0;
-    arteryBlue.position.z = arteryZ;
+    arteryBlue = new THREE.Mesh(
+        new THREE.TubeGeometry(bluePath, veinSegments, arteryRadius, arterySegments, false),
+        blueMaterial
+    );
     scene.add(arteryBlue);
 
-    arteryPurple = new THREE.Mesh(arteryGeometry, purpleMaterial);
-    arteryPurple.position.x = horizontalSpacing;
-    arteryPurple.position.y = 0;
-    arteryPurple.position.z = arteryZ;
+    arteryPurple = new THREE.Mesh(
+        new THREE.TubeGeometry(purplePath, veinSegments, arteryRadius, arterySegments, false),
+        purpleMaterial
+    );
     scene.add(arteryPurple);
 }
 
@@ -122,8 +142,8 @@ function onWindowResize() {
 // FBX Loader
 const fbxLoader = new THREE.FBXLoader();
 fbxLoader.load('narizBoca.fbx', function (object) {
-    object.position.set(0, 0, 0); // Adjust position as needed
-    object.scale.set(10.0, 10.0, 10.0); // Adjust scale as needed
+    object.position.set(0, 0, -5); // Adjust position as needed
+    object.scale.set(5.0, 5.0, 5.0); // Adjust scale as needed
 
     object.traverse(function (child) {
         console.log('Traversing child:', child.type, child.name || '(no name)', child);
