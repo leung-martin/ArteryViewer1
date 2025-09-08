@@ -1,7 +1,7 @@
 'use strict';
 
 //write to console version 0.1
-console.log('Version 0.3');
+console.log('Version 0.0.4');
 
 // Set up scene, camera, and renderer
 const scene = new THREE.Scene();
@@ -19,7 +19,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // Cylinder properties (initial values)
-let arteryRadius = 0.5;
+let arteryRadius = 0.1;
 let arteryHeight = 6;
 const arterySegments = 32;
 let arteryZ = 0;
@@ -35,37 +35,72 @@ const horizontalSpacing = 2.2;
 
 function createArteries() {
     // Remove old arteries if they exist
-    if (arteryPink) scene.remove(arteryPink);
+    if (arteryPink) {
+        if (Array.isArray(arteryPink)) {
+            arteryPink.forEach(mesh => scene.remove(mesh));
+        } else {
+            scene.remove(arteryPink);
+        }
+    }
     if (arteryBlue) scene.remove(arteryBlue);
     if (arteryPurple) scene.remove(arteryPurple);
 
-    // Example vein paths
-    const pinkPath = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-2.2, 0, arteryZ),
-        new THREE.Vector3(-2.2, 1, arteryZ + 2),
-        new THREE.Vector3(-2.2, -1, arteryZ + 4),
-        new THREE.Vector3(-2.2, 0, arteryZ + 6)
+    // Pink: two parallel vertical veins
+    const pinkFullPath1 = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-2.2, 0.3, arteryZ),
+        new THREE.Vector3(-2.2, 1.3, arteryZ + 2),
+        new THREE.Vector3(-2.2, -0.7, arteryZ + 4),
+        new THREE.Vector3(-2.2, 0.3, arteryZ + 6)
     ]);
-    const bluePath = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(0, 0, arteryZ),
-        new THREE.Vector3(0.5, 1, arteryZ + 2),
-        new THREE.Vector3(-0.5, -1, arteryZ + 4),
-        new THREE.Vector3(0, 0, arteryZ + 6)
+    const pinkFullPath2 = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-2.2, -0.3, arteryZ),
+        new THREE.Vector3(-2.2, 0.7, arteryZ + 2),
+        new THREE.Vector3(-2.2, -1.3, arteryZ + 4),
+        new THREE.Vector3(-2.2, -0.3, arteryZ + 6)
     ]);
-    const purplePath = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(2.2, 0, arteryZ),
-        new THREE.Vector3(2.2, 1, arteryZ + 2),
-        new THREE.Vector3(2.2, -1, arteryZ + 4),
-        new THREE.Vector3(2.2, 0, arteryZ + 6)
+
+    // Blue: horizontal vein along x axis
+    const blueFullPath = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-2, 0, 0),
+        new THREE.Vector3(-1, 0, 0.5),
+        new THREE.Vector3(1, 0, -0.5),
+        new THREE.Vector3(2, 0, 0)
     ]);
+    // Purple: horizontal vein along x axis, offset in y
+    const purpleFullPath = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-2, 0.5, 0),
+        new THREE.Vector3(-1, 0.5, 0.5),
+        new THREE.Vector3(1, 0.5, -0.5),
+        new THREE.Vector3(2, 0.5, 0)
+    ]);
+
+    // Use arteryHeight to determine how much of the curve to use (min 2 points)
+    function getPartialCurve(curve, height) {
+        const totalPoints = 64;
+        const percent = Math.max(0.1, Math.min(height / 6, 1)); // 6 is default max height
+        const numPoints = Math.max(2, Math.floor(totalPoints * percent));
+        const points = curve.getPoints(numPoints - 1);
+        return new THREE.CatmullRomCurve3(points);
+    }
+
+    const pinkPath1 = getPartialCurve(pinkFullPath1, arteryHeight);
+    const pinkPath2 = getPartialCurve(pinkFullPath2, arteryHeight);
+    const bluePath = getPartialCurve(blueFullPath, arteryHeight);
+    const purplePath = getPartialCurve(purpleFullPath, arteryHeight);
 
     // TubeGeometry for veins
     const veinSegments = 64;
-    arteryPink = new THREE.Mesh(
-        new THREE.TubeGeometry(pinkPath, veinSegments, arteryRadius, arterySegments, false),
+    const pinkMesh1 = new THREE.Mesh(
+        new THREE.TubeGeometry(pinkPath1, veinSegments, arteryRadius, arterySegments, false),
         pinkMaterial
     );
-    scene.add(arteryPink);
+    const pinkMesh2 = new THREE.Mesh(
+        new THREE.TubeGeometry(pinkPath2, veinSegments, arteryRadius, arterySegments, false),
+        pinkMaterial
+    );
+    arteryPink = [pinkMesh1, pinkMesh2];
+    scene.add(pinkMesh1);
+    scene.add(pinkMesh2);
 
     arteryBlue = new THREE.Mesh(
         new THREE.TubeGeometry(bluePath, veinSegments, arteryRadius, arterySegments, false),
