@@ -1,6 +1,5 @@
 'use strict';
 
-console.log('Hello world');
 // Set up scene, camera, and renderer
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x2a2a2a);
