@@ -123,7 +123,18 @@ function onWindowResize() {
 const fbxLoader = new THREE.FBXLoader();
 fbxLoader.load('narizBoca.fbx', function (object) {
     object.position.set(0, 0, 0); // Adjust position as needed
-    object.scale.set(1.0, 1.0, 1.0); // Adjust scale as needed
+    object.scale.set(100.0, 100.0, 100.0); // Adjust scale as needed
+
+    object.traverse(function (child) {
+        if (child.isMesh) {
+            child.material = new THREE.MeshPhongMaterial({
+                color: 0xcccccc, // light grey
+                transparent: true,
+                opacity: 0.5     // translucent
+            });
+        }
+    });
+
     scene.add(object);
 }, undefined, function (error) {
     console.error('Error loading FBX:', error);
