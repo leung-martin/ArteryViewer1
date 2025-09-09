@@ -78,9 +78,15 @@ function createArteries() {
     function getPartialCurve(curve, height) {
         const totalPoints = 64;
         const percent = Math.max(0.1, Math.min(height / 6, 1)); // 6 is default max height
-        const numPoints = Math.max(2, Math.floor(totalPoints * percent));
-        const points = curve.getPoints(numPoints - 1);
-        return new THREE.CatmullRomCurve3(points);
+        
+        // Sample points along the full curve
+        const points = curve.getPoints(totalPoints);
+        
+        // Take only the portion we want based on height
+        const numPoints = Math.max(2, Math.floor(points.length * percent));
+        const partialPoints = points.slice(0, numPoints);
+        
+        return new THREE.CatmullRomCurve3(partialPoints);
     }
 
     const pinkPath1 = getPartialCurve(pinkFullPath1, arteryHeight);
