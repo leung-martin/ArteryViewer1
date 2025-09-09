@@ -22,7 +22,7 @@ document.body.appendChild(renderer.domElement);
 let arteryRadius = 0.1;
 let arteryHeight = 6;
 const arterySegments = 32;
-let arteryZ = 0;
+let arteryZ = -2;
 
 // Materials
 const pinkMaterial = new THREE.MeshPhongMaterial({ color: 0xff69b4, flatShading: true });
@@ -59,19 +59,21 @@ function createArteries() {
         new THREE.Vector3(-2.2, -0.3, arteryZ + 6)
     ]);
 
-    // Blue: horizontal vein along x axis
+    // Blue: horizontal vein with M shape
     const blueFullPath = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-2, 0, arteryZ),
-        new THREE.Vector3(-1, 0, arteryZ + 0.5),
-        new THREE.Vector3(1, 0, arteryZ - 0.5),
-        new THREE.Vector3(2, 0, arteryZ)
+        new THREE.Vector3(-2, 4, arteryZ),
+        new THREE.Vector3(-1, 2, arteryZ + 2),
+        new THREE.Vector3(0, 4, arteryZ + 1),
+        new THREE.Vector3(1, 2, arteryZ + 2),
+        new THREE.Vector3(2, 4, arteryZ)
     ]);
-    // Purple: horizontal vein along x axis, offset in y
+    // Purple: horizontal vein with M shape, offset in y
     const purpleFullPath = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-2, 0.5, arteryZ),
-        new THREE.Vector3(-1, 0.5, arteryZ + 0.5),
-        new THREE.Vector3(1, 0.5, arteryZ - 0.5),
-        new THREE.Vector3(2, 0.5, arteryZ)
+        new THREE.Vector3(-2, 9.5, arteryZ),
+        new THREE.Vector3(-1, 7.5, arteryZ + 2),
+        new THREE.Vector3(0, 9.5, arteryZ + 1),
+        new THREE.Vector3(1, 7.5, arteryZ + 2),
+        new THREE.Vector3(2, 9.5, arteryZ)
     ]);
 
     // Use arteryHeight to determine how much of the curve to use (min 2 points)
