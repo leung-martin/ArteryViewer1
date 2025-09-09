@@ -19,7 +19,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // Cylinder properties (initial values)
-let arteryRadius = 0.1;
+let arteryRadius = 0.05;
 let arteryHeight = 6;
 const arterySegments = 32;
 let arteryZ = -1;
@@ -48,37 +48,37 @@ function createArteries() {
     // Pink: two parallel vertical veins shaped like brackets ) (
 
     const pinkFullPath2 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-1.0, 7.5, arteryZ),
-        new THREE.Vector3(-0.7, 7, arteryZ),
-        new THREE.Vector3(-0.7, 6.5, arteryZ),
-        new THREE.Vector3(-0.7, 6, arteryZ),
-        new THREE.Vector3(-1.0, 5.5, arteryZ)
+        new THREE.Vector3(-1.0, 6.5, arteryZ + 0.2),
+        new THREE.Vector3(-0.7, 6, arteryZ + 0.2),
+        new THREE.Vector3(-0.7, 5.5, arteryZ + 0.2),
+        new THREE.Vector3(-0.7, 5, arteryZ + 0.2),
+        new THREE.Vector3(-1.0, 4.5, arteryZ + 0.2)
     ]);
 
     const pinkFullPath1 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(1.0, 7.5, arteryZ),
-        new THREE.Vector3(0.7, 7, arteryZ),
-        new THREE.Vector3(0.7, 6.5, arteryZ),
-        new THREE.Vector3(0.7, 6, arteryZ),
-        new THREE.Vector3(1.0, 5.5, arteryZ)
+        new THREE.Vector3(1.0, 6.5, arteryZ + 0.2),
+        new THREE.Vector3(0.7, 6, arteryZ + 0.2),
+        new THREE.Vector3(0.7, 5.5, arteryZ + 0.2),
+        new THREE.Vector3(0.7, 5, arteryZ + 0.2),
+        new THREE.Vector3(1.0, 4.5, arteryZ + 0.2)
     ]);
 
     // Purple: horizontal vein with M shape, offset in y
     const purpleFullPath = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-2, 4, arteryZ),
-        new THREE.Vector3(-1, 4.1, arteryZ + 0.1),
-        new THREE.Vector3(0, 4, arteryZ + 0.2),
-        new THREE.Vector3(1, 4.1, arteryZ + 0.1),
-        new THREE.Vector3(2, 4, arteryZ)
+        new THREE.Vector3(-1, 4, arteryZ),
+        new THREE.Vector3(-0.5, 4.1, arteryZ + 0.1),
+        new THREE.Vector3(0, 4, arteryZ + 1),
+        new THREE.Vector3(0.5, 4.1, arteryZ + 0.1),
+        new THREE.Vector3(1, 4, arteryZ)
     ]);
 
     // Blue: horizontal vein with M shape
     const blueFullPath = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-2, 2.5, arteryZ),
+        new THREE.Vector3(-2, 2.5, arteryZ - 0.2),
         new THREE.Vector3(-1, 2.6, arteryZ + 0.1),
-        new THREE.Vector3(0, 2.5, arteryZ + 0.2),
+        new THREE.Vector3(0, 2.5, arteryZ + 0.3),
         new THREE.Vector3(1, 2.6, arteryZ + 0.1),
-        new THREE.Vector3(2, 2.5, arteryZ)
+        new THREE.Vector3(2, 2.5, arteryZ - 0.2)
     ]);
 
 
