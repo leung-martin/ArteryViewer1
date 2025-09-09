@@ -45,18 +45,20 @@ function createArteries() {
     if (arteryBlue) scene.remove(arteryBlue);
     if (arteryPurple) scene.remove(arteryPurple);
 
-    // Pink: two parallel vertical veins
+    // Pink: two parallel vertical veins shaped like brackets ) (
     const pinkFullPath1 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-2.2, 0.3, arteryZ),
-        new THREE.Vector3(-2.2, 1.3, arteryZ + 2),
-        new THREE.Vector3(-2.2, -0.7, arteryZ + 4),
-        new THREE.Vector3(-2.2, 0.3, arteryZ + 6)
+        new THREE.Vector3(-2.2, 2, arteryZ),
+        new THREE.Vector3(-1.5, 1, arteryZ),
+        new THREE.Vector3(-1.5, 0, arteryZ),
+        new THREE.Vector3(-1.5, -1, arteryZ),
+        new THREE.Vector3(-2.2, -2, arteryZ)
     ]);
     const pinkFullPath2 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-2.2, -0.3, arteryZ),
-        new THREE.Vector3(-2.2, 0.7, arteryZ + 2),
-        new THREE.Vector3(-2.2, -1.3, arteryZ + 4),
-        new THREE.Vector3(-2.2, -0.3, arteryZ + 6)
+        new THREE.Vector3(-2.9, 2, arteryZ),
+        new THREE.Vector3(-3.6, 1, arteryZ),
+        new THREE.Vector3(-3.6, 0, arteryZ),
+        new THREE.Vector3(-3.6, -1, arteryZ),
+        new THREE.Vector3(-2.9, -2, arteryZ)
     ]);
 
     // Blue: horizontal vein with M shape
