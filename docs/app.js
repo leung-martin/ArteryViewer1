@@ -19,10 +19,10 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // Cylinder properties (initial values)
-let arteryRadius = 0.05;
+let arteryRadius = 0.04;
 let arteryHeight = 6;
 const arterySegments = 32;
-let arteryZ = -1;
+let arteryZ = -1.2;
 
 // Materials
 const pinkMaterial = new THREE.MeshPhongMaterial({ color: 0xff69b4, flatShading: true });
@@ -48,27 +48,27 @@ function createArteries() {
     // Pink: two parallel vertical veins shaped like brackets ) (
 
     const pinkFullPath2 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-1.0, 6.5, arteryZ + 0.2),
-        new THREE.Vector3(-0.7, 6, arteryZ + 0.2),
-        new THREE.Vector3(-0.7, 5.5, arteryZ + 0.2),
-        new THREE.Vector3(-0.7, 5, arteryZ + 0.2),
-        new THREE.Vector3(-1.0, 4.5, arteryZ + 0.2)
+        new THREE.Vector3(-0.6, 6.5, arteryZ + 0),
+        new THREE.Vector3(-0.3, 6, arteryZ + 0.1),
+        new THREE.Vector3(-0.3, 5.5, arteryZ + 0.2),
+        new THREE.Vector3(-0.3, 5, arteryZ + 0.3),
+        new THREE.Vector3(-0.6, 4.5, arteryZ + 0.4)
     ]);
 
     const pinkFullPath1 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(1.0, 6.5, arteryZ + 0.2),
-        new THREE.Vector3(0.7, 6, arteryZ + 0.2),
-        new THREE.Vector3(0.7, 5.5, arteryZ + 0.2),
-        new THREE.Vector3(0.7, 5, arteryZ + 0.2),
-        new THREE.Vector3(1.0, 4.5, arteryZ + 0.2)
+        new THREE.Vector3(0.6, 6.5, arteryZ + 0),
+        new THREE.Vector3(0.3, 6, arteryZ + 0.1),
+        new THREE.Vector3(0.3, 5.5, arteryZ + 0.2),
+        new THREE.Vector3(0.3, 5, arteryZ + 0.3),
+        new THREE.Vector3(0.6, 4.5, arteryZ + 0.4)
     ]);
 
     // Purple: horizontal vein with M shape, offset in y
     const purpleFullPath = new THREE.CatmullRomCurve3([
         new THREE.Vector3(-1, 4, arteryZ),
-        new THREE.Vector3(-0.5, 4.1, arteryZ + 0.1),
-        new THREE.Vector3(0, 4, arteryZ + 1),
-        new THREE.Vector3(0.5, 4.1, arteryZ + 0.1),
+        new THREE.Vector3(-0.5, 4.1, arteryZ + 1.8),
+        new THREE.Vector3(0, 4, arteryZ + 2),
+        new THREE.Vector3(0.5, 4.1, arteryZ + 1.8),
         new THREE.Vector3(1, 4, arteryZ)
     ]);
 
@@ -76,7 +76,7 @@ function createArteries() {
     const blueFullPath = new THREE.CatmullRomCurve3([
         new THREE.Vector3(-2, 2.5, arteryZ - 0.2),
         new THREE.Vector3(-1, 2.6, arteryZ + 0.1),
-        new THREE.Vector3(0, 2.5, arteryZ + 0.3),
+        new THREE.Vector3(0, 2.5, arteryZ + 0.4),
         new THREE.Vector3(1, 2.6, arteryZ + 0.1),
         new THREE.Vector3(2, 2.5, arteryZ - 0.2)
     ]);
@@ -199,7 +199,7 @@ fbxLoader.load('narizBoca.fbx', function (object) {
                 color: 0xcccccc, // light grey
                 transparent: true,
                 opacity: 0.5,    // translucent
-                side: THREE.DoubleSide,
+                side: THREE.FrontSide,
                 depthWrite: true
             });
         } else {
