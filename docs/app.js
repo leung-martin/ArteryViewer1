@@ -61,17 +61,17 @@ function createArteries() {
 
     // Blue: horizontal vein along x axis
     const blueFullPath = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-2, 0, 0),
-        new THREE.Vector3(-1, 0, 0.5),
-        new THREE.Vector3(1, 0, -0.5),
-        new THREE.Vector3(2, 0, 0)
+        new THREE.Vector3(-2, 0, arteryZ),
+        new THREE.Vector3(-1, 0, arteryZ + 0.5),
+        new THREE.Vector3(1, 0, arteryZ - 0.5),
+        new THREE.Vector3(2, 0, arteryZ)
     ]);
     // Purple: horizontal vein along x axis, offset in y
     const purpleFullPath = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-2, 0.5, 0),
-        new THREE.Vector3(-1, 0.5, 0.5),
-        new THREE.Vector3(1, 0.5, -0.5),
-        new THREE.Vector3(2, 0.5, 0)
+        new THREE.Vector3(-2, 0.5, arteryZ),
+        new THREE.Vector3(-1, 0.5, arteryZ + 0.5),
+        new THREE.Vector3(1, 0.5, arteryZ - 0.5),
+        new THREE.Vector3(2, 0.5, arteryZ)
     ]);
 
     // Use arteryHeight to determine how much of the curve to use (min 2 points)
