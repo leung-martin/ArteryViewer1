@@ -156,10 +156,7 @@ lengthSlider.addEventListener('input', function() {
 
 zSlider.addEventListener('input', function() {
     arteryZ = parseFloat(this.value);
-    // Only update z position, not geometry
-    if (arteryPink) arteryPink.position.z = arteryZ;
-    if (arteryBlue) arteryBlue.position.z = arteryZ;
-    if (arteryPurple) arteryPurple.position.z = arteryZ;
+    createArteries();
 });
 
 // Reset view function
