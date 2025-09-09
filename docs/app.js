@@ -47,35 +47,35 @@ function createArteries() {
 
     // Pink: two parallel vertical veins shaped like brackets ) (
     const pinkFullPath1 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-2.2, 2, arteryZ),
-        new THREE.Vector3(-1.5, 1, arteryZ),
-        new THREE.Vector3(-1.5, 0, arteryZ),
-        new THREE.Vector3(-1.5, -1, arteryZ),
-        new THREE.Vector3(-2.2, -2, arteryZ)
+        new THREE.Vector3(1.1, 4, arteryZ),
+        new THREE.Vector3(0.4, 3, arteryZ),
+        new THREE.Vector3(0.4, 2, arteryZ),
+        new THREE.Vector3(0.4, 1, arteryZ),
+        new THREE.Vector3(1.1, 0, arteryZ)
     ]);
     const pinkFullPath2 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-2.9, 2, arteryZ),
-        new THREE.Vector3(-3.6, 1, arteryZ),
-        new THREE.Vector3(-3.6, 0, arteryZ),
-        new THREE.Vector3(-3.6, -1, arteryZ),
-        new THREE.Vector3(-2.9, -2, arteryZ)
+        new THREE.Vector3(-1.0, 4, arteryZ),
+        new THREE.Vector3(-0.3, 3, arteryZ),
+        new THREE.Vector3(-0.3, 2, arteryZ),
+        new THREE.Vector3(-0.3, 1, arteryZ),
+        new THREE.Vector3(-1.0, 0, arteryZ)
     ]);
 
     // Blue: horizontal vein with M shape
     const blueFullPath = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-2, 4, arteryZ),
-        new THREE.Vector3(-1, 2, arteryZ + 2),
-        new THREE.Vector3(0, 4, arteryZ + 1),
-        new THREE.Vector3(1, 2, arteryZ + 2),
-        new THREE.Vector3(2, 4, arteryZ)
+        new THREE.Vector3(-2, 2.5, arteryZ),
+        new THREE.Vector3(-1, 2, arteryZ + 0.2),
+        new THREE.Vector3(0, 2.5, arteryZ + 0.1),
+        new THREE.Vector3(1, 2, arteryZ + 0.2),
+        new THREE.Vector3(2, 2.5, arteryZ)
     ]);
     // Purple: horizontal vein with M shape, offset in y
     const purpleFullPath = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-2, 9.5, arteryZ),
-        new THREE.Vector3(-1, 7.5, arteryZ + 2),
-        new THREE.Vector3(0, 9.5, arteryZ + 1),
-        new THREE.Vector3(1, 7.5, arteryZ + 2),
-        new THREE.Vector3(2, 9.5, arteryZ)
+        new THREE.Vector3(-2, 3.5, arteryZ),
+        new THREE.Vector3(-1, 3, arteryZ + 0.2),
+        new THREE.Vector3(0,  3.5, arteryZ + 0.1),
+        new THREE.Vector3(1,  3, arteryZ + 0.2),
+        new THREE.Vector3(2,  3.5, arteryZ)
     ]);
 
     // Use arteryHeight to determine how much of the curve to use (min 2 points)
@@ -191,7 +191,7 @@ fbxLoader.load('narizBoca.fbx', function (object) {
         console.log('Traversing child:', child.type, child.name || '(no name)', child);
         if (child.isMesh) {
             console.log('Found mesh:', child.name || '(no name)', '— setting material to light grey, translucent, double-sided');
-            child.material = new THREE.MeshBasicMaterial({
+            child.material = new THREE.MeshPhongMaterial({
                 color: 0xcccccc, // light grey
                 transparent: true,
                 opacity: 0.5,    // translucent
