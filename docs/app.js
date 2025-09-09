@@ -22,7 +22,7 @@ document.body.appendChild(renderer.domElement);
 let arteryRadius = 0.1;
 let arteryHeight = 6;
 const arterySegments = 32;
-let arteryZ = -2;
+let arteryZ = -1;
 
 // Materials
 const pinkMaterial = new THREE.MeshPhongMaterial({ color: 0xff69b4, flatShading: true });
@@ -47,18 +47,18 @@ function createArteries() {
 
     // Pink: two parallel vertical veins shaped like brackets ) (
     const pinkFullPath1 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(1.1, 4, arteryZ),
+        new THREE.Vector3(1.1, 6, arteryZ),
+        new THREE.Vector3(0.4, 5, arteryZ),
+        new THREE.Vector3(0.4, 4, arteryZ),
         new THREE.Vector3(0.4, 3, arteryZ),
-        new THREE.Vector3(0.4, 2, arteryZ),
-        new THREE.Vector3(0.4, 1, arteryZ),
-        new THREE.Vector3(1.1, 0, arteryZ)
+        new THREE.Vector3(1.1, 2, arteryZ)
     ]);
     const pinkFullPath2 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-1.0, 4, arteryZ),
+        new THREE.Vector3(-1.0, 6, arteryZ),
+        new THREE.Vector3(-0.3, 5, arteryZ),
+        new THREE.Vector3(-0.3, 4, arteryZ),
         new THREE.Vector3(-0.3, 3, arteryZ),
-        new THREE.Vector3(-0.3, 2, arteryZ),
-        new THREE.Vector3(-0.3, 1, arteryZ),
-        new THREE.Vector3(-1.0, 0, arteryZ)
+        new THREE.Vector3(-1.0, 2, arteryZ)
     ]);
 
     // Blue: horizontal vein with M shape
@@ -195,7 +195,7 @@ fbxLoader.load('narizBoca.fbx', function (object) {
                 color: 0xcccccc, // light grey
                 transparent: true,
                 opacity: 0.5,    // translucent
-                side: THREE.FrontSide,
+                side: THREE.DoubleSide,
                 depthWrite: false
             });
         } else {
