@@ -1,7 +1,7 @@
 'use strict';
 
 //write to console version 0.1
-console.log('Version 0.0.6');
+console.log('Version 0.0.7');
 
 // Set up scene, camera, and renderer
 const scene = new THREE.Scene();
@@ -46,37 +46,41 @@ function createArteries() {
     if (arteryPurple) scene.remove(arteryPurple);
 
     // Pink: two parallel vertical veins shaped like brackets ) (
-    const pinkFullPath1 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(1.1, 6, arteryZ),
-        new THREE.Vector3(0.4, 5, arteryZ),
-        new THREE.Vector3(0.4, 4, arteryZ),
-        new THREE.Vector3(0.4, 3, arteryZ),
-        new THREE.Vector3(1.1, 2, arteryZ)
-    ]);
+
     const pinkFullPath2 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-1.0, 6, arteryZ),
-        new THREE.Vector3(-0.3, 5, arteryZ),
-        new THREE.Vector3(-0.3, 4, arteryZ),
-        new THREE.Vector3(-0.3, 3, arteryZ),
-        new THREE.Vector3(-1.0, 2, arteryZ)
+        new THREE.Vector3(-1.0, 7.5, arteryZ),
+        new THREE.Vector3(-0.7, 7, arteryZ),
+        new THREE.Vector3(-0.7, 6.5, arteryZ),
+        new THREE.Vector3(-0.7, 6, arteryZ),
+        new THREE.Vector3(-1.0, 5.5, arteryZ)
+    ]);
+
+    const pinkFullPath1 = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(1.0, 7.5, arteryZ),
+        new THREE.Vector3(0.7, 7, arteryZ),
+        new THREE.Vector3(0.7, 6.5, arteryZ),
+        new THREE.Vector3(0.7, 6, arteryZ),
+        new THREE.Vector3(1.0, 5.5, arteryZ)
+    ]);
+
+    // Purple: horizontal vein with M shape, offset in y
+    const purpleFullPath = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-2, 4, arteryZ),
+        new THREE.Vector3(-1, 4.1, arteryZ + 0.1),
+        new THREE.Vector3(0, 4, arteryZ + 0.2),
+        new THREE.Vector3(1, 4.1, arteryZ + 0.1),
+        new THREE.Vector3(2, 4, arteryZ)
     ]);
 
     // Blue: horizontal vein with M shape
     const blueFullPath = new THREE.CatmullRomCurve3([
         new THREE.Vector3(-2, 2.5, arteryZ),
-        new THREE.Vector3(-1, 2, arteryZ + 0.2),
-        new THREE.Vector3(0, 2.5, arteryZ + 0.1),
-        new THREE.Vector3(1, 2, arteryZ + 0.2),
+        new THREE.Vector3(-1, 2.6, arteryZ + 0.1),
+        new THREE.Vector3(0, 2.5, arteryZ + 0.2),
+        new THREE.Vector3(1, 2.6, arteryZ + 0.1),
         new THREE.Vector3(2, 2.5, arteryZ)
     ]);
-    // Purple: horizontal vein with M shape, offset in y
-    const purpleFullPath = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-2, 3.5, arteryZ),
-        new THREE.Vector3(-1, 3, arteryZ + 0.2),
-        new THREE.Vector3(0,  3.5, arteryZ + 0.1),
-        new THREE.Vector3(1,  3, arteryZ + 0.2),
-        new THREE.Vector3(2,  3.5, arteryZ)
-    ]);
+
 
     // Use arteryHeight to determine how much of the curve to use (min 2 points)
     function getPartialCurve(curve, height) {
@@ -196,7 +200,7 @@ fbxLoader.load('narizBoca.fbx', function (object) {
                 transparent: true,
                 opacity: 0.5,    // translucent
                 side: THREE.DoubleSide,
-                depthWrite: false
+                depthWrite: true
             });
         } else {
             console.log('Not a mesh:', child.type, child.name || '(no name)');
