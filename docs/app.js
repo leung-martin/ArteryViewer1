@@ -8,7 +8,7 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x2a2a2a);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 3, 14);
+camera.position.set(0, 10, 14);
 
 // Store initial camera position for reset
 const initialCameraPosition = camera.position.clone();
@@ -207,8 +207,10 @@ fbxLoader.load('narizBoca.fbx', function (object) {
             child.material = new THREE.MeshPhongMaterial({
                 color: 0xcccccc, // light grey
                 transparent: true,
-                opacity: 0.2,    // translucent
-                side: THREE.BackSide,
+                opacity: 0.3,    // translucent
+                side: THREE.FrontSide,
+
+
                 depthWrite: false
             });
         } else {
