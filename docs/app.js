@@ -204,7 +204,7 @@ fbxLoader.load('narizBoca.fbx', function (object) {
         console.log('Traversing child:', child.type, child.name || '(no name)', child);
         if (child.isMesh) {
             console.log('Found mesh:', child.name || '(no name)', '— setting material to light grey, translucent, double-sided');
-            child.material = new THREE.MeshDepthMaterial({
+            child.material = new THREE.MeshBasicMaterial({
                 color: 0xcccccc, // light grey
                 transparent: true,
                 opacity: 0.5,    // translucent
