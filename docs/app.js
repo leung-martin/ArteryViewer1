@@ -20,7 +20,7 @@ document.body.appendChild(renderer.domElement);
 
 // Cylinder properties (initial values)
 let arteryRadius = 0.04;
-let arteryHeight = 6;
+let arteryHeight = 4;
 const arterySegments = 32;
 let arteryZ = -0.8;
 
@@ -204,7 +204,7 @@ fbxLoader.load('narizBoca.fbx', function (object) {
         console.log('Traversing child:', child.type, child.name || '(no name)', child);
         if (child.isMesh) {
             console.log('Found mesh:', child.name || '(no name)', '— setting material to light grey, translucent, double-sided');
-            child.material = new THREE.MeshBasicMaterial({
+            child.material = new THREE.MeshStandardMaterial({
                 color: 0xcccccc, // light grey
                 transparent: true,
                 opacity: 0.5,    // translucent
