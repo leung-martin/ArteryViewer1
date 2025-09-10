@@ -156,6 +156,68 @@ controls.screenSpacePanning = false;
 controls.minDistance = 5;
 controls.maxDistance = 20;
 
+// Create 3D axis legend
+function createAxisLegend() {
+    const axisGroup = new THREE.Group();
+    
+    // Axis length
+    const axisLength = 1;
+    const arrowLength = 0.2;
+    const arrowRadius = 0.05;
+    
+    // X-axis (Red)
+    const xGeometry = new THREE.CylinderGeometry(0.02, 0.02, axisLength, 8);
+    const xMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    const xAxis = new THREE.Mesh(xGeometry, xMaterial);
+    xAxis.rotation.z = -Math.PI / 2;
+    xAxis.position.x = axisLength / 2;
+    
+    // X-axis arrow
+    const xArrowGeometry = new THREE.ConeGeometry(arrowRadius, arrowLength, 8);
+    const xArrow = new THREE.Mesh(xArrowGeometry, xMaterial);
+    xArrow.rotation.z = -Math.PI / 2;
+    xArrow.position.x = axisLength + arrowLength / 2;
+    
+    // Y-axis (Green)
+    const yGeometry = new THREE.CylinderGeometry(0.02, 0.02, axisLength, 8);
+    const yMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const yAxis = new THREE.Mesh(yGeometry, yMaterial);
+    yAxis.position.y = axisLength / 2;
+    
+    // Y-axis arrow
+    const yArrowGeometry = new THREE.ConeGeometry(arrowRadius, arrowLength, 8);
+    const yArrow = new THREE.Mesh(yArrowGeometry, yMaterial);
+    yArrow.position.y = axisLength + arrowLength / 2;
+    
+    // Z-axis (Blue)
+    const zGeometry = new THREE.CylinderGeometry(0.02, 0.02, axisLength, 8);
+    const zMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff });
+    const zAxis = new THREE.Mesh(zGeometry, zMaterial);
+    zAxis.rotation.x = Math.PI / 2;
+    zAxis.position.z = axisLength / 2;
+    
+    // Z-axis arrow
+    const zArrowGeometry = new THREE.ConeGeometry(arrowRadius, arrowLength, 8);
+    const zArrow = new THREE.Mesh(zArrowGeometry, zMaterial);
+    zArrow.rotation.x = Math.PI / 2;
+    zArrow.position.z = axisLength + arrowLength / 2;
+    
+    // Add labels
+    const loader = new THREE.FontLoader();
+    
+    // Add all axes to group
+    axisGroup.add(xAxis, xArrow, yAxis, yArrow, zAxis, zArrow);
+    
+    // Position the axis legend in the corner
+    axisGroup.position.set(-8, 8, 5);
+    axisGroup.scale.set(2, 2, 2);
+    
+    return axisGroup;
+}
+
+const axisLegend = createAxisLegend();
+scene.add(axisLegend);
+
 // Slider controls
 const diameterSlider = document.getElementById('diameterSlider');
 const lengthSlider = document.getElementById('lengthSlider');
@@ -183,6 +245,47 @@ function resetView() {
     controls.reset();
 }
 
+// Hamburger menu functionality
+document.getElementById('menuButton').addEventListener('click', function() {
+    const menuItems = document.getElementById('menuItems');
+    menuItems.classList.toggle('show');
+});
+
+// Close menu when clicking outside
+document.addEventListener('click', function(event) {
+    const menu = document.getElementById('hamburgerMenu');
+    const menuItems = document.getElementById('menuItems');
+    
+    if (!menu.contains(event.target)) {
+        menuItems.classList.remove('show');
+    }
+});
+
+// Menu item event listeners
+document.getElementById('resetViewButton').addEventListener('click', function() {
+    resetView();
+    document.getElementById('menuItems').classList.remove('show'); // Close menu after action
+});
+
+document.getElementById('aboutButton').addEventListener('click', function() {
+    document.getElementById('aboutModal').style.display = 'block';
+    document.getElementById('menuItems').classList.remove('show'); // Close menu after action
+});
+
+// About modal functionality
+document.getElementById('closeAbout').addEventListener('click', function() {
+    document.getElementById('aboutModal').style.display = 'none';
+});
+
+// Close modal when clicking outside of it
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('aboutModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+});
+
+// Keep old reset button listener for compatibility
 document.getElementById('resetButton').addEventListener('click', resetView);
 
 // Handle window resize
@@ -226,6 +329,24 @@ fbxLoader.load('narizBoca.fbx', function (object) {
 function animate() {
     requestAnimationFrame(animate);
     controls.update();
+    
+    // Update axis legend to match camera rotation
+    if (axisLegend) {
+        // Position the axis legend relative to camera
+        const cameraDirection = new THREE.Vector3();
+        camera.getWorldDirection(cameraDirection);
+        
+        // Keep the axis legend in the bottom-left corner of the view
+        const legendPosition = new THREE.Vector3(-6, -4, 0);
+        legendPosition.applyMatrix4(camera.matrixWorld);
+        
+        // Position it in screen space
+        axisLegend.position.set(-8, -6, 2);
+        
+        // Make it rotate with the camera
+        axisLegend.rotation.copy(camera.rotation);
+    }
+    
     renderer.render(scene, camera);
 }
 

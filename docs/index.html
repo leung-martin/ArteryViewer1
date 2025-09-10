@@ -24,6 +24,94 @@
             font-family: Arial, sans-serif;
             font-size: 24px;
         }
+        #hamburgerMenu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        #menuButton {
+            background: rgba(30,30,30,0.85);
+            border: none;
+            color: white;
+            font-size: 24px;
+            padding: 10px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+        }
+        #menuButton:hover {
+            background: rgba(50,50,50,0.9);
+        }
+        #menuItems {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: rgba(30,30,30,0.95);
+            border-radius: 5px;
+            padding: 10px;
+            min-width: 150px;
+        }
+        #menuItems.show {
+            display: block;
+        }
+        #menuItems button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+        }
+        #menuItems button:hover {
+            background-color: #45a049;
+        }
+        #menuItems button:last-child {
+            margin-bottom: 0;
+        }
+        /* Modal styles for About popup */
+        #aboutModal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        #aboutModalContent {
+            background-color: rgba(30,30,30,0.95);
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        #aboutModalContent h2 {
+            margin-top: 0;
+            color: #4CAF50;
+        }
+        #closeAbout {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-family: Arial, sans-serif;
+        }
+        #closeAbout:hover {
+            background-color: #45a049;
+        }
         #resetButton {
             position: absolute;
             bottom: 20px;
@@ -35,9 +123,7 @@
             border-radius: 5px;
             cursor: pointer;
             font-family: Arial, sans-serif;
-        }
-        #resetButton:hover {
-            background-color: #45a049;
+            display: none; /* Hide the old button */
         }
         #sliders {
             position: absolute;
@@ -63,7 +149,26 @@
 <body>
     <div id="title">Arterial Data 3D Visualization</div>
     <div id="info">Click and drag to rotate, scroll or pinch to zoom</div>
-    <button id="resetButton">Reset View</button>
+    
+    <!-- Hamburger Menu -->
+    <div id="hamburgerMenu">
+        <button id="menuButton">?</button>
+        <div id="menuItems">
+            <button id="resetViewButton">Reset View</button>
+            <button id="aboutButton">About</button>
+        </div>
+    </div>
+    
+    <!-- About Modal -->
+    <div id="aboutModal">
+        <div id="aboutModalContent">
+            <h2>About</h2>
+            <p>Made by Katherynn Zhang & Martin Leung 2025</p>
+            <button id="closeAbout">Close</button>
+        </div>
+    </div>
+
+    <button id="resetButton">Reset View</button> <!-- Keep for backward compatibility but hidden -->
     <div id="sliders">
         <label for="diameterSlider">Diameter</label>
         <input type="range" id="diameterSlider" min="0.04" max="0.1" step="0.002" value="0.04">
@@ -74,6 +179,7 @@
         <label for="zSlider">Z Position</label>
         <input type="range" id="zSlider" min="-1" max="-0.8" step="0.02" value="-0.8">
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://unpkg.com/fflate@0.8.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/fflate@0.8.2/umd/index.js"></script>
