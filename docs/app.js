@@ -22,7 +22,7 @@ document.body.appendChild(renderer.domElement);
 let arteryRadius = 0.04;
 let arteryHeight = 6;
 const arterySegments = 32;
-let arteryZ = -1.2;
+let arteryZ = -0.8;
 
 // Materials
 const pinkMaterial = new THREE.MeshPhongMaterial({ color: 0xff69b4, flatShading: true });
@@ -48,19 +48,19 @@ function createArteries() {
     // Pink: two parallel vertical veins shaped like brackets ) (
 
     const pinkFullPath2 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-0.6, 6.5, arteryZ + 0),
-        new THREE.Vector3(-0.3, 6, arteryZ + 0.1),
-        new THREE.Vector3(-0.3, 5.5, arteryZ + 0.2),
-        new THREE.Vector3(-0.3, 5, arteryZ + 0.3),
-        new THREE.Vector3(-0.6, 4.5, arteryZ + 0.4)
+        new THREE.Vector3(-0.6, 6.5, arteryZ + 0.5),
+        new THREE.Vector3(-0.3, 6, arteryZ + 0.6),
+        new THREE.Vector3(-0.3, 5.5, arteryZ + 0.7),
+        new THREE.Vector3(-0.3, 5, arteryZ + 0.8),
+        new THREE.Vector3(-0.6, 4.5, arteryZ + 0.9)
     ]);
 
     const pinkFullPath1 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(0.6, 6.5, arteryZ + 0),
-        new THREE.Vector3(0.3, 6, arteryZ + 0.1),
-        new THREE.Vector3(0.3, 5.5, arteryZ + 0.2),
-        new THREE.Vector3(0.3, 5, arteryZ + 0.3),
-        new THREE.Vector3(0.6, 4.5, arteryZ + 0.4)
+        new THREE.Vector3(0.6, 6.5, arteryZ + 0.5),
+        new THREE.Vector3(0.3, 6, arteryZ + 0.6),
+        new THREE.Vector3(0.3, 5.5, arteryZ + 0.7),
+        new THREE.Vector3(0.3, 5, arteryZ + 0.8),
+        new THREE.Vector3(0.6, 4.5, arteryZ + 0.9)
     ]);
 
     // Purple: horizontal vein with M shape, offset in y
@@ -90,9 +90,18 @@ function createArteries() {
         // Sample points along the full curve
         const points = curve.getPoints(totalPoints);
         
-        // Take only the portion we want based on height
+        // Calculate how many points to use based on height
         const numPoints = Math.max(2, Math.floor(points.length * percent));
-        const partialPoints = points.slice(0, numPoints);
+        
+        // Calculate start and end indices to grow from center outward
+        const centerIndex = Math.floor(points.length / 2);
+        const halfRange = Math.floor(numPoints / 2);
+        
+        const startIndex = Math.max(0, centerIndex - halfRange);
+        const endIndex = Math.min(points.length - 1, centerIndex + halfRange);
+        
+        // Take points from center outward
+        const partialPoints = points.slice(startIndex, endIndex + 1);
         
         return new THREE.CatmullRomCurve3(partialPoints);
     }
@@ -195,7 +204,7 @@ fbxLoader.load('narizBoca.fbx', function (object) {
         console.log('Traversing child:', child.type, child.name || '(no name)', child);
         if (child.isMesh) {
             console.log('Found mesh:', child.name || '(no name)', '— setting material to light grey, translucent, double-sided');
-            child.material = new THREE.MeshPhongMaterial({
+            child.material = new THREE.MeshDepthMaterial({
                 color: 0xcccccc, // light grey
                 transparent: true,
                 opacity: 0.5,    // translucent
