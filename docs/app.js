@@ -204,12 +204,12 @@ fbxLoader.load('narizBoca.fbx', function (object) {
         console.log('Traversing child:', child.type, child.name || '(no name)', child);
         if (child.isMesh) {
             console.log('Found mesh:', child.name || '(no name)', '— setting material to light grey, translucent, double-sided');
-            child.material = new THREE.MeshStandardMaterial({
+            child.material = new THREE.MeshPhongMaterial({
                 color: 0xcccccc, // light grey
                 transparent: true,
-                opacity: 0.5,    // translucent
-                side: THREE.FrontSide,
-                depthWrite: true
+                opacity: 0.2,    // translucent
+                side: THREE.DoubleSide,
+                depthWrite: false
             });
         } else {
             console.log('Not a mesh:', child.type, child.name || '(no name)');
