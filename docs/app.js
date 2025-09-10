@@ -28,6 +28,13 @@ let arteryZ = -0.8;
 const pinkMaterial = new THREE.MeshPhongMaterial({ color: 0xff69b4, flatShading: true });
 const blueMaterial = new THREE.MeshPhongMaterial({ color: 0x2196f3, flatShading: true });
 const purpleMaterial = new THREE.MeshPhongMaterial({ color: 0x9c27b0, flatShading: true });
+const highlightMaterial = new THREE.MeshPhongMaterial({ color: 0x00ff00, flatShading: true }); // Highlight material
+
+// Raycaster for mouse interaction
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let selectedArtery = null;
+let originalMaterial = null;
 
 // Create 3 long cylinders (arteries) manually
 let arteryPink, arteryBlue, arteryPurple;
@@ -44,6 +51,10 @@ function createArteries() {
     }
     if (arteryBlue) scene.remove(arteryBlue);
     if (arteryPurple) scene.remove(arteryPurple);
+    
+    // Reset selection when recreating arteries
+    selectedArtery = null;
+    originalMaterial = null;
 
     // Pink: two parallel vertical veins shaped like brackets ) (
 
@@ -223,17 +234,62 @@ window.addEventListener('click', function(event) {
     }
 });
 
-// Keep old reset button listener for compatibility
-document.getElementById('resetButton').addEventListener('click', resetView);
-
-// Handle window resize
-window.addEventListener('resize', onWindowResize, false);
-
-function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+// Mouse interaction for artery selection
+function onMouseMove(event) {
+    // Calculate mouse position in normalized device coordinates (-1 to +1)
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 }
+
+function onMouseClick(event) {
+    // Only process clicks if not clicking on UI elements
+    if (event.target.tagName === 'CANVAS') {
+        // Update mouse position
+        onMouseMove(event);
+        
+        // Update the picking ray with the camera and mouse position
+        raycaster.setFromCamera(mouse, camera);
+        
+        // Get all artery meshes
+        const arteryMeshes = [];
+        if (arteryPink && Array.isArray(arteryPink)) {
+            arteryMeshes.push(...arteryPink);
+        }
+        if (arteryBlue) arteryMeshes.push(arteryBlue);
+        if (arteryPurple) arteryMeshes.push(arteryPurple);
+        
+        // Calculate objects intersecting the picking ray
+        const intersects = raycaster.intersectObjects(arteryMeshes);
+        
+        // Reset previously selected artery
+        if (selectedArtery && originalMaterial) {
+            selectedArtery.material = originalMaterial;
+            selectedArtery = null;
+            originalMaterial = null;
+        }
+        
+        if (intersects.length > 0) {
+            // Select the closest intersected artery
+            selectedArtery = intersects[0].object;
+            originalMaterial = selectedArtery.material;
+            selectedArtery.material = highlightMaterial;
+            
+            // Log which artery was selected
+            if (arteryPink && arteryPink.includes(selectedArtery)) {
+                console.log('Selected: Pink artery');
+            } else if (selectedArtery === arteryBlue) {
+                console.log('Selected: Blue artery');
+            } else if (selectedArtery === arteryPurple) {
+                console.log('Selected: Purple artery');
+            }
+        }
+    }
+}
+
+// Add event listeners for mouse interaction
+window.addEventListener('mousemove', onMouseMove, false);
+window.addEventListener('click', onMouseClick, false);
+
 
 // FBX Loader
 const fbxLoader = new THREE.FBXLoader();
