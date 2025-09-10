@@ -55,10 +55,14 @@ function createArteries() {
     // Reset selection when recreating arteries
     selectedArtery = null;
     originalMaterial = null;
-    // Hide the selected artery display when arteries are recreated
+    // Hide the selected artery display and sliders menu when arteries are recreated
     const selectedArteryDisplay = document.getElementById('selectedArtery');
+    const slidersMenu = document.getElementById('sliders');
     if (selectedArteryDisplay) {
         selectedArteryDisplay.style.display = 'none';
+    }
+    if (slidersMenu) {
+        slidersMenu.style.display = 'none';
     }
 
     // Pink: two parallel vertical veins shaped like brackets ) (
@@ -283,8 +287,9 @@ function onMouseClick(event) {
             }
             selectedArtery = null;
             originalMaterial = null;
-            // Hide the selected artery display
+            // Hide the selected artery display and sliders menu
             document.getElementById('selectedArtery').style.display = 'none';
+            document.getElementById('sliders').style.display = 'none';
         }
         
         if (intersects.length > 0) {
