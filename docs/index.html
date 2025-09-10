@@ -135,6 +135,7 @@
             color: white;
             font-family: Arial, sans-serif;
             font-size: 15px;
+            display: none; /* Initially hidden */
         }
         #sliders label {
             display: block;
@@ -143,6 +144,16 @@
         #sliders input[type=range] {
             width: 180px;
             margin-bottom: 12px;
+        }
+        #selectedArtery {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: rgba(50,50,50,0.8);
+            border-radius: 5px;
+            color: #00ff00;
+            font-weight: bold;
+            text-align: center;
+            display: none;
         }
     </style>
 </head>
@@ -178,7 +189,9 @@
         <br>
         <label for="zSlider">Z Position</label>
         <input type="range" id="zSlider" min="-1" max="-0.8" step="0.02" value="-0.8">
+        <div id="selectedArtery">No artery selected</div>
     </div>
+    <div id="selectedArtery">Selected Artery: None</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://unpkg.com/fflate@0.8.2"></script>

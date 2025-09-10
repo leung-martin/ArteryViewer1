@@ -8,7 +8,7 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x2a2a2a);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 15, 5);
+camera.position.set(0, 2, 5);
 
 // Store initial camera position for reset
 const initialCameraPosition = camera.position.clone();
@@ -55,6 +55,11 @@ function createArteries() {
     // Reset selection when recreating arteries
     selectedArtery = null;
     originalMaterial = null;
+    // Hide the selected artery display when arteries are recreated
+    const selectedArteryDisplay = document.getElementById('selectedArtery');
+    if (selectedArteryDisplay) {
+        selectedArteryDisplay.style.display = 'none';
+    }
 
     // Pink: two parallel vertical veins shaped like brackets ) (
 
@@ -262,26 +267,68 @@ function onMouseClick(event) {
         const intersects = raycaster.intersectObjects(arteryMeshes);
         
         // Reset previously selected artery
-        if (selectedArtery && originalMaterial) {
-            selectedArtery.material = originalMaterial;
+        if (selectedArtery) {
+            if (Array.isArray(selectedArtery)) {
+                // Reset both pink arteries
+                selectedArtery.forEach((mesh, index) => {
+                    if (originalMaterial && originalMaterial[index]) {
+                        mesh.material = originalMaterial[index];
+                    }
+                });
+            } else {
+                // Reset single artery
+                if (originalMaterial) {
+                    selectedArtery.material = originalMaterial;
+                }
+            }
             selectedArtery = null;
             originalMaterial = null;
+            // Hide the selected artery display
+            document.getElementById('selectedArtery').style.display = 'none';
         }
         
         if (intersects.length > 0) {
-            // Select the closest intersected artery
-            selectedArtery = intersects[0].object;
-            originalMaterial = selectedArtery.material;
-            selectedArtery.material = highlightMaterial;
+            const clickedMesh = intersects[0].object;
+            const selectedArteryDisplay = document.getElementById('selectedArtery');
             
-            // Log which artery was selected
-            if (arteryPink && arteryPink.includes(selectedArtery)) {
-                console.log('Selected: Pink artery');
-            } else if (selectedArtery === arteryBlue) {
-                console.log('Selected: Blue artery');
-            } else if (selectedArtery === arteryPurple) {
-                console.log('Selected: Purple artery');
+            // Check if clicked mesh is one of the pink arteries
+            if (arteryPink && arteryPink.includes(clickedMesh)) {
+                // Select both pink arteries
+                selectedArtery = arteryPink;
+                originalMaterial = arteryPink.map(mesh => mesh.material);
+                arteryPink.forEach(mesh => {
+                    mesh.material = highlightMaterial;
+                });
+                console.log('Selected: A Arteries (Pink)');
+                selectedArteryDisplay.textContent = 'Selected: A Arteries';
+                selectedArteryDisplay.style.display = 'block';
+                // Show sliders menu
+                document.getElementById('sliders').style.display = 'block';
+            } else if (clickedMesh === arteryBlue) {
+                // Select blue artery
+                selectedArtery = arteryBlue;
+                originalMaterial = arteryBlue.material;
+                arteryBlue.material = highlightMaterial;
+                console.log('Selected: B Artery (Blue)');
+                selectedArteryDisplay.textContent = 'Selected: B Artery';
+                selectedArteryDisplay.style.display = 'block';
+                // Show sliders menu
+                document.getElementById('sliders').style.display = 'block';
+            } else if (clickedMesh === arteryPurple) {
+                // Select purple artery
+                selectedArtery = arteryPurple;
+                originalMaterial = arteryPurple.material;
+                arteryPurple.material = highlightMaterial;
+                console.log('Selected: C Artery (Purple)');
+                selectedArteryDisplay.textContent = 'Selected: C Artery';
+                selectedArteryDisplay.style.display = 'block';
+                // Show sliders menu
+                document.getElementById('sliders').style.display = 'block';
             }
+        } else {
+            // No artery selected, hide the display and sliders menu
+            document.getElementById('selectedArtery').style.display = 'none';
+            document.getElementById('sliders').style.display = 'none';
         }
     }
 }
