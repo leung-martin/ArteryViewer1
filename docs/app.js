@@ -8,8 +8,8 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x2a2a2a);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 5, 8);
-camera.rotation.set(-1.6, 0, 0);
+camera.position.set(0, 8, 8);
+camera.rotation.set(-2, 0, 0);
 
 // Store initial camera position for reset
 const initialCameraPosition = camera.position.clone();
@@ -40,6 +40,9 @@ const highlightMaterial = new THREE.MeshPhongMaterial({ color: 0x00ff00, flatSha
 
 // Raycaster for mouse interaction
 const raycaster = new THREE.Raycaster();
+// Increase threshold for easier selection, especially on mobile
+raycaster.params.Line.threshold = 0.5;
+raycaster.params.Points.threshold = 0.5;
 const mouse = new THREE.Vector2();
 let selectedArtery = null;
 let originalMaterial = null;
@@ -71,6 +74,7 @@ function createArteries() {
     originalMaterial = null;
 
     // A Arteries: two parallel vertical veins shaped like brackets ) (
+    // Dorsal Nasal Arteries: two parallel vertical veins shaped like brackets ) (
     const aArteryFullPath2 = new THREE.CatmullRomCurve3([
         new THREE.Vector3(-0.6, 6.5, arteryCache.A.z + 0.5),
         new THREE.Vector3(-0.3, 6, arteryCache.A.z + 0.6),
@@ -88,6 +92,7 @@ function createArteries() {
     ]);
 
     // C Artery: horizontal vein with M shape, offset in y
+    // Lateral Nasal Artery: horizontal vein with M shape, offset in y
     const cArteryFullPath = new THREE.CatmullRomCurve3([
         new THREE.Vector3(-1, 4, arteryCache.C.z),
         new THREE.Vector3(-0.5, 4.1, arteryCache.C.z + 1.8),
@@ -97,6 +102,7 @@ function createArteries() {
     ]);
 
     // B Artery: horizontal vein with M shape
+    // Superior Labial Artery: horizontal vein with M shape
     const bArteryFullPath = new THREE.CatmullRomCurve3([
         new THREE.Vector3(-2, 2.5, arteryCache.B.z - 0.2),
         new THREE.Vector3(-1, 2.6, arteryCache.B.z + 0.1),
@@ -171,7 +177,7 @@ function createArteries() {
             aArtery.forEach(mesh => {
                 mesh.material = highlightMaterial;
             });
-            selectedArteryDisplay.textContent = 'Selected: A Arteries';
+            selectedArteryDisplay.textContent = 'Selected: Dorsal Nasal Arteries';
             selectedArteryDisplay.style.display = 'block';
             document.getElementById('sliders').style.display = 'block';
             // Update sliders to A artery's cached values
@@ -180,7 +186,7 @@ function createArteries() {
             selectedArtery = bArtery;
             originalMaterial = bArtery.material;
             bArtery.material = highlightMaterial;
-            selectedArteryDisplay.textContent = 'Selected: B Artery';
+            selectedArteryDisplay.textContent = 'Selected: Superior Labial Artery';
             selectedArteryDisplay.style.display = 'block';
             document.getElementById('sliders').style.display = 'block';
             // Update sliders to B artery's cached values
@@ -189,7 +195,7 @@ function createArteries() {
             selectedArtery = cArtery;
             originalMaterial = cArtery.material;
             cArtery.material = highlightMaterial;
-            selectedArteryDisplay.textContent = 'Selected: C Artery';
+            selectedArteryDisplay.textContent = 'Selected: Lateral Nasal Artery';
             selectedArteryDisplay.style.display = 'block';
             document.getElementById('sliders').style.display = 'block';
             // Update sliders to C artery's cached values
@@ -361,6 +367,26 @@ function handleSelection(clientX, clientY) {
     // Calculate objects intersecting the picking ray
     const intersects = raycaster.intersectObjects(arteryMeshes);
     
+    // If no direct hit, try a slightly larger area (especially helpful for mobile)
+    if (intersects.length === 0) {
+        // Try multiple points around the original click/touch point for better hit detection
+        const tolerance = 0.02; // Adjust this value to make selection more/less forgiving
+        const offsets = [
+            [tolerance, 0], [-tolerance, 0], [0, tolerance], [0, -tolerance],
+            [tolerance, tolerance], [-tolerance, -tolerance], [tolerance, -tolerance], [-tolerance, tolerance]
+        ];
+        
+        for (let offset of offsets) {
+            const testMouse = new THREE.Vector2(mouse.x + offset[0], mouse.y + offset[1]);
+            raycaster.setFromCamera(testMouse, camera);
+            const testIntersects = raycaster.intersectObjects(arteryMeshes);
+            if (testIntersects.length > 0) {
+                intersects.push(...testIntersects);
+                break; // Found a hit, no need to test more offsets
+            }
+        }
+    }
+    
     if (intersects.length > 0) {
         const clickedMesh = intersects[0].object;
         const selectedArteryDisplay = document.getElementById('selectedArtery');
@@ -409,8 +435,8 @@ function handleSelection(clientX, clientY) {
                 aArtery.forEach(mesh => {
                     mesh.material = highlightMaterial;
                 });
-                console.log('Selected: A Arteries');
-                selectedArteryDisplay.textContent = 'Selected: A Arteries';
+                console.log('Selected: Dorsal Nasal Arteries');
+                selectedArteryDisplay.textContent = 'Selected: Dorsal Nasal Arteries';
                 selectedArteryDisplay.style.display = 'block';
                 // Show sliders menu and update to A artery's cached values
                 document.getElementById('sliders').style.display = 'block';
@@ -420,8 +446,8 @@ function handleSelection(clientX, clientY) {
                 selectedArtery = bArtery;
                 originalMaterial = bArtery.material;
                 bArtery.material = highlightMaterial;
-                console.log('Selected: B Artery');
-                selectedArteryDisplay.textContent = 'Selected: B Artery';
+                console.log('Selected: Superior Labial Artery');
+                selectedArteryDisplay.textContent = 'Selected: Superior Labial Artery';
                 selectedArteryDisplay.style.display = 'block';
                 // Show sliders menu and update to B artery's cached values
                 document.getElementById('sliders').style.display = 'block';
@@ -431,8 +457,8 @@ function handleSelection(clientX, clientY) {
                 selectedArtery = cArtery;
                 originalMaterial = cArtery.material;
                 cArtery.material = highlightMaterial;
-                console.log('Selected: C Artery');
-                selectedArteryDisplay.textContent = 'Selected: C Artery';
+                console.log('Selected: Lateral Nasal Artery');
+                selectedArteryDisplay.textContent = 'Selected: Lateral Nasal Artery';
                 selectedArteryDisplay.style.display = 'block';
                 // Show sliders menu and update to C artery's cached values
                 document.getElementById('sliders').style.display = 'block';
