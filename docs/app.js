@@ -222,9 +222,9 @@ controls.screenSpacePanning = true;
 controls.minDistance = 5;
 controls.maxDistance = 20;
 
-// Now set the desired rotation after OrbitControls initialization
-camera.rotation.set(-0.3, 0, 0);
-controls.update(); // Update controls to match the new rotation
+// Set the target to look at the center of the arteries (they're positioned around Y=4.5)
+controls.target.set(0, 4, 0); // Look at the center of the arterial structures
+controls.update(); // Apply the target change
 
 // Store initial state after OrbitControls setup
 initialCameraPosition = camera.position.clone();
