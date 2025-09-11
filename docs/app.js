@@ -221,7 +221,7 @@ controls.minDistance = 5;
 controls.maxDistance = 20;
 
 // Set initial camera position and target
-camera.position.set(0, 6.5, 7); // Set initial camera position
+camera.position.set(-2, 5, 4); // Set initial camera position
 controls.target.set(0, 4, 0); // Look at the center of the arterial structures
 controls.update(); // Apply the changes
 
@@ -450,8 +450,8 @@ function handleSelection(clientX, clientY) {
                 aArtery.forEach(mesh => {
                     mesh.material = highlightMaterial;
                 });
-                console.log('Selected: Dorsal Nasal Arteries');
-                selectedArteryDisplay.textContent = 'Selected: Dorsal Nasal Arteries';
+                console.log('Dorsal Nasal Arteries');
+                selectedArteryDisplay.textContent = 'Dorsal Nasal Arteries';
                 selectedArteryDisplay.style.display = 'block';
                 // Show sliders menu and update to A artery's cached values
                 document.getElementById('sliders').style.display = 'block';
@@ -461,8 +461,8 @@ function handleSelection(clientX, clientY) {
                 selectedArtery = bArtery;
                 originalMaterial = bArtery.material;
                 bArtery.material = highlightMaterial;
-                console.log('Selected: Superior Labial Artery');
-                selectedArteryDisplay.textContent = 'Selected: Superior Labial Artery';
+                console.log('Superior Labial Artery');
+                selectedArteryDisplay.textContent = 'Superior Labial Artery';
                 selectedArteryDisplay.style.display = 'block';
                 // Show sliders menu and update to B artery's cached values
                 document.getElementById('sliders').style.display = 'block';
@@ -472,8 +472,8 @@ function handleSelection(clientX, clientY) {
                 selectedArtery = cArtery;
                 originalMaterial = cArtery.material;
                 cArtery.material = highlightMaterial;
-                console.log('Selected: Lateral Nasal Artery');
-                selectedArteryDisplay.textContent = 'Selected: Lateral Nasal Artery';
+                console.log('Lateral Nasal Artery');
+                selectedArteryDisplay.textContent = 'Lateral Nasal Artery';
                 selectedArteryDisplay.style.display = 'block';
                 // Show sliders menu and update to C artery's cached values
                 document.getElementById('sliders').style.display = 'block';
