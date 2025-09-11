@@ -535,31 +535,31 @@ fbxLoader.load('narizBoca.fbx', function (object) {
     scene.add(object);
 }, undefined, function (error) {
     console.error('Error loading FBX:', error);
+});
 
-    // Animation loop
-    function animate() {
-        requestAnimationFrame(animate);
-        controls.update();
-        
-        // Update camera info if sliders are visible AND camera info is shown
-        if (document.getElementById('sliders').style.display === 'block' && 
-            document.getElementById('cameraInfo').style.display === 'block') {
-            updateCameraInfo();
-        }
-        
-        renderer.render(scene, camera);
+// Animation loop
+function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    
+    // Update camera info if sliders are visible AND camera info is shown
+    if (document.getElementById('sliders').style.display === 'block' && 
+        document.getElementById('cameraInfo').style.display === 'block') {
+        updateCameraInfo();
     }
+    
+    renderer.render(scene, camera);
+}
 
-    animate();
+animate();
 
-    // Function to update camera info display
-    function updateCameraInfo() {
-        const position = camera.position;
-        const rotation = camera.rotation;
-        
-        document.getElementById('cameraPosition').textContent = 
-            `${position.x.toFixed(1)}, ${position.y.toFixed(1)}, ${position.z.toFixed(1)}`;
-        document.getElementById('cameraRotation').textContent = 
-            `${rotation.x.toFixed(2)}, ${rotation.y.toFixed(2)}, ${rotation.z.toFixed(2)}`;
-    }
+// Function to update camera info display
+function updateCameraInfo() {
+    const position = camera.position;
+    const rotation = camera.rotation;
+    
+    document.getElementById('cameraPosition').textContent = 
+        `${position.x.toFixed(1)}, ${position.y.toFixed(1)}, ${position.z.toFixed(1)}`;
+    document.getElementById('cameraRotation').textContent = 
+        `${rotation.x.toFixed(2)}, ${rotation.y.toFixed(2)}, ${rotation.z.toFixed(2)}`;
 }
