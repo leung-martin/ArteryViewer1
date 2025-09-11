@@ -177,7 +177,7 @@ function createArteries() {
             aArtery.forEach(mesh => {
                 mesh.material = highlightMaterial;
             });
-            selectedArteryDisplay.textContent = 'Selected: Dorsal Nasal Arteries';
+            selectedArteryDisplay.textContent = 'Dorsal Nasal Arteries';
             selectedArteryDisplay.style.display = 'block';
             document.getElementById('sliders').style.display = 'block';
             // Update sliders to A artery's cached values
@@ -186,7 +186,7 @@ function createArteries() {
             selectedArtery = bArtery;
             originalMaterial = bArtery.material;
             bArtery.material = highlightMaterial;
-            selectedArteryDisplay.textContent = 'Selected: Superior Labial Artery';
+            selectedArteryDisplay.textContent = 'Superior Labial Artery';
             selectedArteryDisplay.style.display = 'block';
             document.getElementById('sliders').style.display = 'block';
             // Update sliders to B artery's cached values
@@ -195,7 +195,7 @@ function createArteries() {
             selectedArtery = cArtery;
             originalMaterial = cArtery.material;
             cArtery.material = highlightMaterial;
-            selectedArteryDisplay.textContent = 'Selected: Lateral Nasal Artery';
+            selectedArteryDisplay.textContent = 'Lateral Nasal Artery';
             selectedArteryDisplay.style.display = 'block';
             document.getElementById('sliders').style.display = 'block';
             // Update sliders to C artery's cached values
