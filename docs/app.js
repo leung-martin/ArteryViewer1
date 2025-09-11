@@ -9,13 +9,13 @@ scene.background = new THREE.Color(0x2a2a2a);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 4, 7);
-camera.rotation.set(-0.3, 0, 0);
+// Remove initial rotation setting - will set it after OrbitControls
 
 
 
-// Store initial camera position for reset
-const initialCameraPosition = camera.position.clone();
-const initialCameraRotation = camera.rotation.clone();
+// Store initial camera position for reset (will update after OrbitControls setup)
+let initialCameraPosition;
+let initialCameraRotation;
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -223,6 +223,14 @@ controls.dampingFactor = 0.05;
 controls.screenSpacePanning = false;
 controls.minDistance = 5;
 controls.maxDistance = 20;
+
+// Now set the desired rotation after OrbitControls initialization
+camera.rotation.set(-0.3, 0, 0);
+controls.update(); // Update controls to match the new rotation
+
+// Store initial state after OrbitControls setup
+initialCameraPosition = camera.position.clone();
+initialCameraRotation = camera.rotation.clone();
 
 // Slider controls
 const diameterSlider = document.getElementById('diameterSlider');
