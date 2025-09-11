@@ -12,6 +12,7 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 // Store initial camera position for reset (will update after OrbitControls setup)
 let initialCameraPosition;
 let initialCameraRotation;
+let initialControlsTarget;
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -228,6 +229,7 @@ controls.update(); // Apply the changes
 // Store initial state after OrbitControls setup
 initialCameraPosition = camera.position.clone();
 initialCameraRotation = camera.rotation.clone();
+initialControlsTarget = controls.target.clone();
 
 // Slider controls
 const diameterSlider = document.getElementById('diameterSlider');
@@ -296,7 +298,8 @@ zSlider.addEventListener('input', function() {
 function resetView() {
     camera.position.copy(initialCameraPosition);
     camera.rotation.copy(initialCameraRotation);
-    controls.reset();
+    controls.target.copy(initialControlsTarget);
+    controls.update();
 }
 
 // Hamburger menu functionality
