@@ -1,15 +1,17 @@
 'use strict';
 
 //write to console version 0.1
-console.log('Version 0.0.7');
+console.log('Version 0.0.8');
 
 // Set up scene, camera, and renderer
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x2a2a2a);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 8, 8);
-camera.rotation.set(-2, 0, 0);
+camera.position.set(0, 12, 8);
+camera.rotation.set(-3, 0, 0);
+
+
 
 // Store initial camera position for reset
 const initialCameraPosition = camera.position.clone();
@@ -527,7 +529,23 @@ function animate() {
     requestAnimationFrame(animate);
     controls.update();
     
+    // Update camera info if sliders are visible
+    if (document.getElementById('sliders').style.display === 'block') {
+        updateCameraInfo();
+    }
+    
     renderer.render(scene, camera);
 }
 
 animate();
+
+// Function to update camera info display
+function updateCameraInfo() {
+    const position = camera.position;
+    const rotation = camera.rotation;
+    
+    document.getElementById('cameraPosition').textContent = 
+        `${position.x.toFixed(1)}, ${position.y.toFixed(1)}, ${position.z.toFixed(1)}`;
+    document.getElementById('cameraRotation').textContent = 
+        `${rotation.x.toFixed(2)}, ${rotation.y.toFixed(2)}, ${rotation.z.toFixed(2)}`;
+}
