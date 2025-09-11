@@ -9,7 +9,7 @@ scene.background = new THREE.Color(0x2a2a2a);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 5, 5);
-camera.rotation.set(-0.4, 0, 0); // Rotate upwards by about 17 degrees
+camera.rotation.set(-1.1, 0, 0);
 
 // Store initial camera position for reset
 const initialCameraPosition = camera.position.clone();
@@ -317,112 +317,139 @@ function onMouseMove(event) {
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 }
 
-function onMouseClick(event) {
-    // Only process clicks if not clicking on UI elements
-    if (event.target.tagName === 'CANVAS') {
-        // Update mouse position
-        onMouseMove(event);
-        
-        // Update the picking ray with the camera and mouse position
-        raycaster.setFromCamera(mouse, camera);
-        
-        // Get all artery meshes
-        const arteryMeshes = [];
-        if (aArtery && Array.isArray(aArtery)) {
-            arteryMeshes.push(...aArtery);
-        }
-        if (bArtery) arteryMeshes.push(bArtery);
-        if (cArtery) arteryMeshes.push(cArtery);
-        
-        // Calculate objects intersecting the picking ray
-        const intersects = raycaster.intersectObjects(arteryMeshes);
-        
-        if (intersects.length > 0) {
-            const clickedMesh = intersects[0].object;
-            const selectedArteryDisplay = document.getElementById('selectedArtery');
-            
-            // Only reset if we're selecting a different artery
-            let newSelection = null;
-            
-            // Check if clicked mesh is one of the A arteries
-            if (aArtery && aArtery.includes(clickedMesh)) {
-                newSelection = 'A';
-            } else if (clickedMesh === bArtery) {
-                newSelection = 'B';
-            } else if (clickedMesh === cArtery) {
-                newSelection = 'C';
-            }
-            
-            // Only change selection if it's different from current
-            let currentSelection = null;
-            if (selectedArtery === aArtery) currentSelection = 'A';
-            else if (selectedArtery === bArtery) currentSelection = 'B';
-            else if (selectedArtery === cArtery) currentSelection = 'C';
-            
-            if (newSelection !== currentSelection) {
-                // Reset previously selected artery
-                if (selectedArtery) {
-                    if (Array.isArray(selectedArtery)) {
-                        // Reset both A arteries
-                        selectedArtery.forEach((mesh, index) => {
-                            if (originalMaterial && originalMaterial[index]) {
-                                mesh.material = originalMaterial[index];
-                            }
-                        });
-                    } else {
-                        // Reset single artery
-                        if (originalMaterial) {
-                            selectedArtery.material = originalMaterial;
-                        }
-                    }
-                }
-                
-                // Set new selection
-                if (newSelection === 'A') {
-                    // Select both A arteries
-                    selectedArtery = aArtery;
-                    originalMaterial = aArtery.map(mesh => mesh.material);
-                    aArtery.forEach(mesh => {
-                        mesh.material = highlightMaterial;
-                    });
-                    console.log('Selected: A Arteries');
-                    selectedArteryDisplay.textContent = 'Selected: A Arteries';
-                    selectedArteryDisplay.style.display = 'block';
-                    // Show sliders menu and update to A artery's cached values
-                    document.getElementById('sliders').style.display = 'block';
-                    updateSlidersFromCache('A');
-                } else if (newSelection === 'B') {
-                    // Select B artery
-                    selectedArtery = bArtery;
-                    originalMaterial = bArtery.material;
-                    bArtery.material = highlightMaterial;
-                    console.log('Selected: B Artery');
-                    selectedArteryDisplay.textContent = 'Selected: B Artery';
-                    selectedArteryDisplay.style.display = 'block';
-                    // Show sliders menu and update to B artery's cached values
-                    document.getElementById('sliders').style.display = 'block';
-                    updateSlidersFromCache('B');
-                } else if (newSelection === 'C') {
-                    // Select C artery
-                    selectedArtery = cArtery;
-                    originalMaterial = cArtery.material;
-                    cArtery.material = highlightMaterial;
-                    console.log('Selected: C Artery');
-                    selectedArteryDisplay.textContent = 'Selected: C Artery';
-                    selectedArteryDisplay.style.display = 'block';
-                    // Show sliders menu and update to C artery's cached values
-                    document.getElementById('sliders').style.display = 'block';
-                    updateSlidersFromCache('C');
-                }
-            }
-        }
-        // Note: Removed the else clause that was deselecting on empty clicks
+function onTouchMove(event) {
+    // Handle touch move events
+    if (event.touches.length === 1) {
+        const touch = event.touches[0];
+        mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
     }
 }
 
-// Add event listeners for mouse interaction
+function handleSelection(clientX, clientY) {
+    // Calculate mouse/touch position in normalized device coordinates (-1 to +1)
+    mouse.x = (clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(clientY / window.innerHeight) * 2 + 1;
+    
+    // Update the picking ray with the camera and mouse position
+    raycaster.setFromCamera(mouse, camera);
+    
+    // Get all artery meshes
+    const arteryMeshes = [];
+    if (aArtery && Array.isArray(aArtery)) {
+        arteryMeshes.push(...aArtery);
+    }
+    if (bArtery) arteryMeshes.push(bArtery);
+    if (cArtery) arteryMeshes.push(cArtery);
+    
+    // Calculate objects intersecting the picking ray
+    const intersects = raycaster.intersectObjects(arteryMeshes);
+    
+    if (intersects.length > 0) {
+        const clickedMesh = intersects[0].object;
+        const selectedArteryDisplay = document.getElementById('selectedArtery');
+        
+        // Only reset if we're selecting a different artery
+        let newSelection = null;
+        
+        // Check if clicked mesh is one of the A arteries
+        if (aArtery && aArtery.includes(clickedMesh)) {
+            newSelection = 'A';
+        } else if (clickedMesh === bArtery) {
+            newSelection = 'B';
+        } else if (clickedMesh === cArtery) {
+            newSelection = 'C';
+        }
+        
+        // Only change selection if it's different from current
+        let currentSelection = null;
+        if (selectedArtery === aArtery) currentSelection = 'A';
+        else if (selectedArtery === bArtery) currentSelection = 'B';
+        else if (selectedArtery === cArtery) currentSelection = 'C';
+        
+        if (newSelection !== currentSelection) {
+            // Reset previously selected artery
+            if (selectedArtery) {
+                if (Array.isArray(selectedArtery)) {
+                    // Reset both A arteries
+                    selectedArtery.forEach((mesh, index) => {
+                        if (originalMaterial && originalMaterial[index]) {
+                            mesh.material = originalMaterial[index];
+                        }
+                    });
+                } else {
+                    // Reset single artery
+                    if (originalMaterial) {
+                        selectedArtery.material = originalMaterial;
+                    }
+                }
+            }
+            
+            // Set new selection
+            if (newSelection === 'A') {
+                // Select both A arteries
+                selectedArtery = aArtery;
+                originalMaterial = aArtery.map(mesh => mesh.material);
+                aArtery.forEach(mesh => {
+                    mesh.material = highlightMaterial;
+                });
+                console.log('Selected: A Arteries');
+                selectedArteryDisplay.textContent = 'Selected: A Arteries';
+                selectedArteryDisplay.style.display = 'block';
+                // Show sliders menu and update to A artery's cached values
+                document.getElementById('sliders').style.display = 'block';
+                updateSlidersFromCache('A');
+            } else if (newSelection === 'B') {
+                // Select B artery
+                selectedArtery = bArtery;
+                originalMaterial = bArtery.material;
+                bArtery.material = highlightMaterial;
+                console.log('Selected: B Artery');
+                selectedArteryDisplay.textContent = 'Selected: B Artery';
+                selectedArteryDisplay.style.display = 'block';
+                // Show sliders menu and update to B artery's cached values
+                document.getElementById('sliders').style.display = 'block';
+                updateSlidersFromCache('B');
+            } else if (newSelection === 'C') {
+                // Select C artery
+                selectedArtery = cArtery;
+                originalMaterial = cArtery.material;
+                cArtery.material = highlightMaterial;
+                console.log('Selected: C Artery');
+                selectedArteryDisplay.textContent = 'Selected: C Artery';
+                selectedArteryDisplay.style.display = 'block';
+                // Show sliders menu and update to C artery's cached values
+                document.getElementById('sliders').style.display = 'block';
+                updateSlidersFromCache('C');
+            }
+        }
+    }
+}
+
+function onMouseClick(event) {
+    // Only process clicks if not clicking on UI elements
+    if (event.target.tagName === 'CANVAS') {
+        handleSelection(event.clientX, event.clientY);
+    }
+}
+
+function onTouchEnd(event) {
+    // Only process touch end if touching canvas and it's a single touch
+    if (event.target.tagName === 'CANVAS' && event.changedTouches.length === 1) {
+        // Prevent default to avoid triggering mouse events
+        event.preventDefault();
+        const touch = event.changedTouches[0];
+        handleSelection(touch.clientX, touch.clientY);
+    }
+}
+
+// Add event listeners for mouse and touch interaction
 window.addEventListener('mousemove', onMouseMove, false);
 window.addEventListener('click', onMouseClick, false);
+
+// Touch event listeners for mobile support
+window.addEventListener('touchmove', onTouchMove, { passive: false });
+window.addEventListener('touchend', onTouchEnd, { passive: false });
 
 
 // FBX Loader
