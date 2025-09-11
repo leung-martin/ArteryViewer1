@@ -8,7 +8,7 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x2a2a2a);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 2, 5);
+camera.position.set(0, 5, 5);
 
 // Store initial camera position for reset
 const initialCameraPosition = camera.position.clone();
@@ -25,9 +25,9 @@ const arterySegments = 32;
 let arteryZ = -0.8;
 
 // Materials
-const pinkMaterial = new THREE.MeshPhongMaterial({ color: 0xff69b4, flatShading: true });
-const blueMaterial = new THREE.MeshPhongMaterial({ color: 0x2196f3, flatShading: true });
-const purpleMaterial = new THREE.MeshPhongMaterial({ color: 0x9c27b0, flatShading: true });
+const aArteryMaterial = new THREE.MeshPhongMaterial({ color: 0x8b0000, flatShading: true }); // Dark red
+const bArteryMaterial = new THREE.MeshPhongMaterial({ color: 0x8b0000, flatShading: true }); // Dark red
+const cArteryMaterial = new THREE.MeshPhongMaterial({ color: 0x8b0000, flatShading: true }); // Dark red
 const highlightMaterial = new THREE.MeshPhongMaterial({ color: 0x00ff00, flatShading: true }); // Highlight material
 
 // Raycaster for mouse interaction
@@ -37,20 +37,20 @@ let selectedArtery = null;
 let originalMaterial = null;
 
 // Create 3 long cylinders (arteries) manually
-let arteryPink, arteryBlue, arteryPurple;
+let aArtery, bArtery, cArtery;
 const horizontalSpacing = 2.2;
 
 function createArteries() {
     // Remove old arteries if they exist
-    if (arteryPink) {
-        if (Array.isArray(arteryPink)) {
-            arteryPink.forEach(mesh => scene.remove(mesh));
+    if (aArtery) {
+        if (Array.isArray(aArtery)) {
+            aArtery.forEach(mesh => scene.remove(mesh));
         } else {
-            scene.remove(arteryPink);
+            scene.remove(aArtery);
         }
     }
-    if (arteryBlue) scene.remove(arteryBlue);
-    if (arteryPurple) scene.remove(arteryPurple);
+    if (bArtery) scene.remove(bArtery);
+    if (cArtery) scene.remove(cArtery);
     
     // Reset selection when recreating arteries
     selectedArtery = null;
@@ -65,9 +65,9 @@ function createArteries() {
         slidersMenu.style.display = 'none';
     }
 
-    // Pink: two parallel vertical veins shaped like brackets ) (
+    // A Arteries: two parallel vertical veins shaped like brackets ) (
 
-    const pinkFullPath2 = new THREE.CatmullRomCurve3([
+    const aArteryFullPath2 = new THREE.CatmullRomCurve3([
         new THREE.Vector3(-0.6, 6.5, arteryZ + 0.5),
         new THREE.Vector3(-0.3, 6, arteryZ + 0.6),
         new THREE.Vector3(-0.3, 5.5, arteryZ + 0.7),
@@ -75,7 +75,7 @@ function createArteries() {
         new THREE.Vector3(-0.6, 4.5, arteryZ + 0.9)
     ]);
 
-    const pinkFullPath1 = new THREE.CatmullRomCurve3([
+    const aArteryFullPath1 = new THREE.CatmullRomCurve3([
         new THREE.Vector3(0.6, 6.5, arteryZ + 0.5),
         new THREE.Vector3(0.3, 6, arteryZ + 0.6),
         new THREE.Vector3(0.3, 5.5, arteryZ + 0.7),
@@ -83,8 +83,8 @@ function createArteries() {
         new THREE.Vector3(0.6, 4.5, arteryZ + 0.9)
     ]);
 
-    // Purple: horizontal vein with M shape, offset in y
-    const purpleFullPath = new THREE.CatmullRomCurve3([
+    // C Artery: horizontal vein with M shape, offset in y
+    const cArteryFullPath = new THREE.CatmullRomCurve3([
         new THREE.Vector3(-1, 4, arteryZ),
         new THREE.Vector3(-0.5, 4.1, arteryZ + 1.8),
         new THREE.Vector3(0, 4, arteryZ + 2),
@@ -92,8 +92,8 @@ function createArteries() {
         new THREE.Vector3(1, 4, arteryZ)
     ]);
 
-    // Blue: horizontal vein with M shape
-    const blueFullPath = new THREE.CatmullRomCurve3([
+    // B Artery: horizontal vein with M shape
+    const bArteryFullPath = new THREE.CatmullRomCurve3([
         new THREE.Vector3(-2, 2.5, arteryZ - 0.2),
         new THREE.Vector3(-1, 2.6, arteryZ + 0.1),
         new THREE.Vector3(0, 2.5, arteryZ + 0.4),
@@ -126,36 +126,36 @@ function createArteries() {
         return new THREE.CatmullRomCurve3(partialPoints);
     }
 
-    const pinkPath1 = getPartialCurve(pinkFullPath1, arteryHeight);
-    const pinkPath2 = getPartialCurve(pinkFullPath2, arteryHeight);
-    const bluePath = getPartialCurve(blueFullPath, arteryHeight);
-    const purplePath = getPartialCurve(purpleFullPath, arteryHeight);
+    const aArteryPath1 = getPartialCurve(aArteryFullPath1, arteryHeight);
+    const aArteryPath2 = getPartialCurve(aArteryFullPath2, arteryHeight);
+    const bArteryPath = getPartialCurve(bArteryFullPath, arteryHeight);
+    const cArteryPath = getPartialCurve(cArteryFullPath, arteryHeight);
 
     // TubeGeometry for veins
     const veinSegments = 64;
-    const pinkMesh1 = new THREE.Mesh(
-        new THREE.TubeGeometry(pinkPath1, veinSegments, arteryRadius, arterySegments, false),
-        pinkMaterial
+    const aArteryMesh1 = new THREE.Mesh(
+        new THREE.TubeGeometry(aArteryPath1, veinSegments, arteryRadius, arterySegments, false),
+        aArteryMaterial
     );
-    const pinkMesh2 = new THREE.Mesh(
-        new THREE.TubeGeometry(pinkPath2, veinSegments, arteryRadius, arterySegments, false),
-        pinkMaterial
+    const aArteryMesh2 = new THREE.Mesh(
+        new THREE.TubeGeometry(aArteryPath2, veinSegments, arteryRadius, arterySegments, false),
+        aArteryMaterial
     );
-    arteryPink = [pinkMesh1, pinkMesh2];
-    scene.add(pinkMesh1);
-    scene.add(pinkMesh2);
+    aArtery = [aArteryMesh1, aArteryMesh2];
+    scene.add(aArteryMesh1);
+    scene.add(aArteryMesh2);
 
-    arteryBlue = new THREE.Mesh(
-        new THREE.TubeGeometry(bluePath, veinSegments, arteryRadius, arterySegments, false),
-        blueMaterial
+    bArtery = new THREE.Mesh(
+        new THREE.TubeGeometry(bArteryPath, veinSegments, arteryRadius, arterySegments, false),
+        bArteryMaterial
     );
-    scene.add(arteryBlue);
+    scene.add(bArtery);
 
-    arteryPurple = new THREE.Mesh(
-        new THREE.TubeGeometry(purplePath, veinSegments, arteryRadius, arterySegments, false),
-        purpleMaterial
+    cArtery = new THREE.Mesh(
+        new THREE.TubeGeometry(cArteryPath, veinSegments, arteryRadius, arterySegments, false),
+        cArteryMaterial
     );
-    scene.add(arteryPurple);
+    scene.add(cArtery);
 }
 
 createArteries();
@@ -261,80 +261,92 @@ function onMouseClick(event) {
         
         // Get all artery meshes
         const arteryMeshes = [];
-        if (arteryPink && Array.isArray(arteryPink)) {
-            arteryMeshes.push(...arteryPink);
+        if (aArtery && Array.isArray(aArtery)) {
+            arteryMeshes.push(...aArtery);
         }
-        if (arteryBlue) arteryMeshes.push(arteryBlue);
-        if (arteryPurple) arteryMeshes.push(arteryPurple);
+        if (bArtery) arteryMeshes.push(bArtery);
+        if (cArtery) arteryMeshes.push(cArtery);
         
         // Calculate objects intersecting the picking ray
         const intersects = raycaster.intersectObjects(arteryMeshes);
-        
-        // Reset previously selected artery
-        if (selectedArtery) {
-            if (Array.isArray(selectedArtery)) {
-                // Reset both pink arteries
-                selectedArtery.forEach((mesh, index) => {
-                    if (originalMaterial && originalMaterial[index]) {
-                        mesh.material = originalMaterial[index];
-                    }
-                });
-            } else {
-                // Reset single artery
-                if (originalMaterial) {
-                    selectedArtery.material = originalMaterial;
-                }
-            }
-            selectedArtery = null;
-            originalMaterial = null;
-            // Hide the selected artery display and sliders menu
-            document.getElementById('selectedArtery').style.display = 'none';
-            document.getElementById('sliders').style.display = 'none';
-        }
         
         if (intersects.length > 0) {
             const clickedMesh = intersects[0].object;
             const selectedArteryDisplay = document.getElementById('selectedArtery');
             
-            // Check if clicked mesh is one of the pink arteries
-            if (arteryPink && arteryPink.includes(clickedMesh)) {
-                // Select both pink arteries
-                selectedArtery = arteryPink;
-                originalMaterial = arteryPink.map(mesh => mesh.material);
-                arteryPink.forEach(mesh => {
-                    mesh.material = highlightMaterial;
-                });
-                console.log('Selected: A Arteries (Pink)');
-                selectedArteryDisplay.textContent = 'Selected: A Arteries';
-                selectedArteryDisplay.style.display = 'block';
-                // Show sliders menu
-                document.getElementById('sliders').style.display = 'block';
-            } else if (clickedMesh === arteryBlue) {
-                // Select blue artery
-                selectedArtery = arteryBlue;
-                originalMaterial = arteryBlue.material;
-                arteryBlue.material = highlightMaterial;
-                console.log('Selected: B Artery (Blue)');
-                selectedArteryDisplay.textContent = 'Selected: B Artery';
-                selectedArteryDisplay.style.display = 'block';
-                // Show sliders menu
-                document.getElementById('sliders').style.display = 'block';
-            } else if (clickedMesh === arteryPurple) {
-                // Select purple artery
-                selectedArtery = arteryPurple;
-                originalMaterial = arteryPurple.material;
-                arteryPurple.material = highlightMaterial;
-                console.log('Selected: C Artery (Purple)');
-                selectedArteryDisplay.textContent = 'Selected: C Artery';
-                selectedArteryDisplay.style.display = 'block';
-                // Show sliders menu
-                document.getElementById('sliders').style.display = 'block';
+            // Only reset if we're selecting a different artery
+            let newSelection = null;
+            
+            // Check if clicked mesh is one of the A arteries
+            if (aArtery && aArtery.includes(clickedMesh)) {
+                newSelection = 'A';
+            } else if (clickedMesh === bArtery) {
+                newSelection = 'B';
+            } else if (clickedMesh === cArtery) {
+                newSelection = 'C';
             }
-        } else {
-            // No artery selected, hide the display and sliders menu
-            document.getElementById('selectedArtery').style.display = 'none';
-            document.getElementById('sliders').style.display = 'none';
+            
+            // Only change selection if it's different from current
+            let currentSelection = null;
+            if (selectedArtery === aArtery) currentSelection = 'A';
+            else if (selectedArtery === bArtery) currentSelection = 'B';
+            else if (selectedArtery === cArtery) currentSelection = 'C';
+            
+            if (newSelection !== currentSelection) {
+                // Reset previously selected artery
+                if (selectedArtery) {
+                    if (Array.isArray(selectedArtery)) {
+                        // Reset both A arteries
+                        selectedArtery.forEach((mesh, index) => {
+                            if (originalMaterial && originalMaterial[index]) {
+                                mesh.material = originalMaterial[index];
+                            }
+                        });
+                    } else {
+                        // Reset single artery
+                        if (originalMaterial) {
+                            selectedArtery.material = originalMaterial;
+                        }
+                    }
+                }
+                
+                // Set new selection
+                if (newSelection === 'A') {
+                    // Select both A arteries
+                    selectedArtery = aArtery;
+                    originalMaterial = aArtery.map(mesh => mesh.material);
+                    aArtery.forEach(mesh => {
+                        mesh.material = highlightMaterial;
+                    });
+                    console.log('Selected: A Arteries');
+                    selectedArteryDisplay.textContent = 'Selected: A Arteries';
+                    selectedArteryDisplay.style.display = 'block';
+                    // Show sliders menu
+                    document.getElementById('sliders').style.display = 'block';
+                } else if (newSelection === 'B') {
+                    // Select B artery
+                    selectedArtery = bArtery;
+                    originalMaterial = bArtery.material;
+                    bArtery.material = highlightMaterial;
+                    console.log('Selected: B Artery');
+                    selectedArteryDisplay.textContent = 'Selected: B Artery';
+                    selectedArteryDisplay.style.display = 'block';
+                    // Show sliders menu
+                    document.getElementById('sliders').style.display = 'block';
+                } else if (newSelection === 'C') {
+                    // Select C artery
+                    selectedArtery = cArtery;
+                    originalMaterial = cArtery.material;
+                    cArtery.material = highlightMaterial;
+                    console.log('Selected: C Artery');
+                    selectedArteryDisplay.textContent = 'Selected: C Artery';
+                    selectedArteryDisplay.style.display = 'block';
+                    // Show sliders menu
+                    document.getElementById('sliders').style.display = 'block';
+                }
+            }
         }
+        // Note: Removed the else clause that was deselecting on empty clicks
     }
 }
 
