@@ -8,7 +8,7 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x2a2a2a);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 6.5, 7);
+
 // Remove initial rotation setting - will set it after OrbitControls
 
 // Store initial camera position for reset (will update after OrbitControls setup)
@@ -223,7 +223,7 @@ controls.minDistance = 5;
 controls.maxDistance = 20;
 
 // Set the target to look at the center of the arteries (they're positioned around Y=4.5)
-controls.target.set(-2, 4, 0); // Look at the center of the arterial structures
+controls.target.set(-0, 4, 0); // Look at the center of the arterial structures
 controls.update(); // Apply the target change
 
 // Store initial state after OrbitControls setup
