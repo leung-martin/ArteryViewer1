@@ -222,9 +222,8 @@ controls.minDistance = 5;
 controls.maxDistance = 20;
 
 // Set initial camera position and target
-camera.position.set(-1.5, 5, 4); // Set initial camera position
-
-controls.target.set(0, 4, 0); // Look at the center of the arterial structures
+camera.position.set(-2, 6, 6.5); // Set initial camera position
+controls.target.set(0, 6, 0); // Look at the center of the arterial structures
 controls.update(); // Apply the changes
 
 // Store initial state after OrbitControls setup
@@ -526,7 +525,7 @@ fbxLoader.load('narizBoca.fbx', function (object) {
             child.material = new THREE.MeshPhongMaterial({
                 color: 0xcccccc, // light grey
                 transparent: true,
-                opacity: 0.3,    // translucent
+                opacity: 0.8,    // translucent
                 side: THREE.FrontSide,
 
 
