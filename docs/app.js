@@ -9,6 +9,7 @@ scene.background = new THREE.Color(0x2a2a2a);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 5, 5);
+camera.rotation.set(0, 0, 0);
 
 // Store initial camera position for reset
 const initialCameraPosition = camera.position.clone();
@@ -41,6 +42,12 @@ let aArtery, bArtery, cArtery;
 const horizontalSpacing = 2.2;
 
 function createArteries() {
+    // Store current selection before recreating arteries
+    let currentSelection = null;
+    if (selectedArtery === aArtery) currentSelection = 'A';
+    else if (selectedArtery === bArtery) currentSelection = 'B';
+    else if (selectedArtery === cArtery) currentSelection = 'C';
+    
     // Remove old arteries if they exist
     if (aArtery) {
         if (Array.isArray(aArtery)) {
@@ -52,18 +59,9 @@ function createArteries() {
     if (bArtery) scene.remove(bArtery);
     if (cArtery) scene.remove(cArtery);
     
-    // Reset selection when recreating arteries
+    // Reset selection temporarily when recreating arteries
     selectedArtery = null;
     originalMaterial = null;
-    // Hide the selected artery display and sliders menu when arteries are recreated
-    const selectedArteryDisplay = document.getElementById('selectedArtery');
-    const slidersMenu = document.getElementById('sliders');
-    if (selectedArteryDisplay) {
-        selectedArteryDisplay.style.display = 'none';
-    }
-    if (slidersMenu) {
-        slidersMenu.style.display = 'none';
-    }
 
     // A Arteries: two parallel vertical veins shaped like brackets ) (
 
@@ -156,6 +154,36 @@ function createArteries() {
         cArteryMaterial
     );
     scene.add(cArtery);
+    
+    // Restore selection after recreating arteries
+    if (currentSelection) {
+        const selectedArteryDisplay = document.getElementById('selectedArtery');
+        
+        if (currentSelection === 'A') {
+            selectedArtery = aArtery;
+            originalMaterial = aArtery.map(mesh => mesh.material);
+            aArtery.forEach(mesh => {
+                mesh.material = highlightMaterial;
+            });
+            selectedArteryDisplay.textContent = 'Selected: A Arteries';
+            selectedArteryDisplay.style.display = 'block';
+            document.getElementById('sliders').style.display = 'block';
+        } else if (currentSelection === 'B') {
+            selectedArtery = bArtery;
+            originalMaterial = bArtery.material;
+            bArtery.material = highlightMaterial;
+            selectedArteryDisplay.textContent = 'Selected: B Artery';
+            selectedArteryDisplay.style.display = 'block';
+            document.getElementById('sliders').style.display = 'block';
+        } else if (currentSelection === 'C') {
+            selectedArtery = cArtery;
+            originalMaterial = cArtery.material;
+            cArtery.material = highlightMaterial;
+            selectedArteryDisplay.textContent = 'Selected: C Artery';
+            selectedArteryDisplay.style.display = 'block';
+            document.getElementById('sliders').style.display = 'block';
+        }
+    }
 }
 
 createArteries();
