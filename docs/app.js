@@ -218,7 +218,7 @@ scene.add(directionalLight);
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
-controls.screenSpacePanning = false;
+controls.screenSpacePanning = true;
 controls.minDistance = 5;
 controls.maxDistance = 20;
 
