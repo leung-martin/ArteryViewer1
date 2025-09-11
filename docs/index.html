@@ -9,7 +9,7 @@
         canvas { display: block; }
         #info {
             position: absolute;
-            top: 10px;
+            bottom: 10px;
             width: 100%;
             text-align: center;
             color: rgba(255, 255, 255, 0.6);
@@ -127,8 +127,9 @@
         }
         #sliders {
             position: absolute;
-            bottom: 20px;
-            right: 20px;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
             background: rgba(30,30,30,0.85);
             padding: 16px 20px 12px 20px;
             border-radius: 10px;
@@ -142,8 +143,21 @@
             margin-bottom: 4px;
         }
         #sliders input[type=range] {
-            width: 180px;
+            width: 140px;
             margin-bottom: 12px;
+            margin-right: 10px;
+            display: inline-block;
+        }
+        #sliders .slider-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        #sliders .slider-value {
+            color: #00ff00;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: right;
         }
         #selectedArtery {
             margin-top: 10px;
@@ -182,13 +196,23 @@
     <button id="resetButton">Reset View</button> <!-- Keep for backward compatibility but hidden -->
     <div id="sliders">
         <label for="diameterSlider">Diameter</label>
-        <input type="range" id="diameterSlider" min="0.04" max="0.1" step="0.002" value="0.04">
-        <br>
+        <div class="slider-container">
+            <input type="range" id="diameterSlider" min="0.04" max="0.1" step="0.002" value="0.04">
+            <span id="diameterValue" class="slider-value">0.04 mm</span>
+        </div>
+        
         <label for="lengthSlider">Length</label>
-        <input type="range" id="lengthSlider" min="4" max="6" step="0.03" value="4">
-        <br>
+        <div class="slider-container">
+            <input type="range" id="lengthSlider" min="4" max="6" step="0.03" value="4">
+            <span id="lengthValue" class="slider-value">4.00 mm</span>
+        </div>
+        
         <label for="zSlider">Z Position</label>
-        <input type="range" id="zSlider" min="-1" max="-0.8" step="0.02" value="-0.8">
+        <div class="slider-container">
+            <input type="range" id="zSlider" min="-1" max="-0.8" step="0.02" value="-0.8">
+            <span id="zValue" class="slider-value">-0.8 mm</span>
+        </div>
+        
         <div id="selectedArtery">No artery selected</div>
     </div>
     <div id="selectedArtery">Selected Artery: None</div>

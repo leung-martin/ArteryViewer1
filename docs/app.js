@@ -8,8 +8,8 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x2a2a2a);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 5, 5);
-camera.rotation.set(-1.1, 0, 0);
+camera.position.set(0, 5, 8);
+camera.rotation.set(-1.6, 0, 0);
 
 // Store initial camera position for reset
 const initialCameraPosition = camera.position.clone();
@@ -200,6 +200,9 @@ function createArteries() {
 
 createArteries();
 
+// Initialize slider value displays
+updateSliderValueDisplays();
+
 // Add lights
 const ambientLight = new THREE.AmbientLight(0x404040);
 scene.add(ambientLight);
@@ -218,7 +221,7 @@ controls.maxDistance = 20;
 
 // Slider controls
 const diameterSlider = document.getElementById('diameterSlider');
-const lengthSlider = document.getElementById('lengthSlider');
+const lengthSlider = document.getElementById('lengthSlider';
 const zSlider = document.getElementById('zSlider');
 
 // Function to update sliders from cache
@@ -227,6 +230,16 @@ function updateSlidersFromCache(arteryType) {
     diameterSlider.value = cache.radius;
     lengthSlider.value = cache.height;
     zSlider.value = cache.z;
+    
+    // Update value displays
+    updateSliderValueDisplays();
+}
+
+// Function to update slider value displays
+function updateSliderValueDisplays() {
+    document.getElementById('diameterValue').textContent = parseFloat(diameterSlider.value).toFixed(3) + ' mm';
+    document.getElementById('lengthValue').textContent = parseFloat(lengthSlider.value).toFixed(2) + ' mm';
+    document.getElementById('zValue').textContent = parseFloat(zSlider.value).toFixed(2) + ' mm';
 }
 
 // Function to update cache and current values from sliders
@@ -250,16 +263,19 @@ function updateCacheFromSliders() {
 
 diameterSlider.addEventListener('input', function() {
     updateCacheFromSliders();
+    updateSliderValueDisplays();
     createArteries();
 });
 
 lengthSlider.addEventListener('input', function() {
     updateCacheFromSliders();
+    updateSliderValueDisplays();
     createArteries();
 });
 
 zSlider.addEventListener('input', function() {
     updateCacheFromSliders();
+    updateSliderValueDisplays();
     createArteries();
 });
 
