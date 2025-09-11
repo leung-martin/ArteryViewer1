@@ -525,7 +525,7 @@ fbxLoader.load('narizBoca.fbx', function (object) {
             child.material = new THREE.MeshPhongMaterial({
                 color: 0xcccccc, // light grey
                 transparent: true,
-                opacity: 0.8,    // translucent
+                opacity: 0.3,    // translucent
                 side: THREE.FrontSide,
 
 
