@@ -9,8 +9,6 @@ scene.background = new THREE.Color(0x2a2a2a);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-// Remove initial rotation setting - will set it after OrbitControls
-
 // Store initial camera position for reset (will update after OrbitControls setup)
 let initialCameraPosition;
 let initialCameraRotation;
@@ -222,9 +220,10 @@ controls.screenSpacePanning = true;
 controls.minDistance = 5;
 controls.maxDistance = 20;
 
-// Set the target to look at the center of the arteries (they're positioned around Y=4.5)
-controls.target.set(-0, 4, 0); // Look at the center of the arterial structures
-controls.update(); // Apply the target change
+// Set initial camera position and target
+camera.position.set(0, 6.5, 7); // Set initial camera position
+controls.target.set(0, 4, 0); // Look at the center of the arterial structures
+controls.update(); // Apply the changes
 
 // Store initial state after OrbitControls setup
 initialCameraPosition = camera.position.clone();
@@ -323,6 +322,14 @@ document.getElementById('resetViewButton').addEventListener('click', function() 
 });
 
 document.getElementById('aboutButton').addEventListener('click', function() {
+    // Toggle camera info visibility when About is pressed
+    const cameraInfo = document.getElementById('cameraInfo');
+    if (cameraInfo.style.display === 'none' || cameraInfo.style.display === '') {
+        cameraInfo.style.display = 'block';
+    } else {
+        cameraInfo.style.display = 'none';
+    }
+    
     document.getElementById('aboutModal').style.display = 'block';
     document.getElementById('menuItems').classList.remove('show'); // Close menu after action
 });
@@ -528,30 +535,31 @@ fbxLoader.load('narizBoca.fbx', function (object) {
     scene.add(object);
 }, undefined, function (error) {
     console.error('Error loading FBX:', error);
-});
 
-// Animation loop
-function animate() {
-    requestAnimationFrame(animate);
-    controls.update();
-    
-    // Update camera info if sliders are visible
-    if (document.getElementById('sliders').style.display === 'block') {
-        updateCameraInfo();
+    // Animation loop
+    function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        
+        // Update camera info if sliders are visible AND camera info is shown
+        if (document.getElementById('sliders').style.display === 'block' && 
+            document.getElementById('cameraInfo').style.display === 'block') {
+            updateCameraInfo();
+        }
+        
+        renderer.render(scene, camera);
     }
-    
-    renderer.render(scene, camera);
-}
 
-animate();
+    animate();
 
-// Function to update camera info display
-function updateCameraInfo() {
-    const position = camera.position;
-    const rotation = camera.rotation;
-    
-    document.getElementById('cameraPosition').textContent = 
-        `${position.x.toFixed(1)}, ${position.y.toFixed(1)}, ${position.z.toFixed(1)}`;
-    document.getElementById('cameraRotation').textContent = 
-        `${rotation.x.toFixed(2)}, ${rotation.y.toFixed(2)}, ${rotation.z.toFixed(2)}`;
+    // Function to update camera info display
+    function updateCameraInfo() {
+        const position = camera.position;
+        const rotation = camera.rotation;
+        
+        document.getElementById('cameraPosition').textContent = 
+            `${position.x.toFixed(1)}, ${position.y.toFixed(1)}, ${position.z.toFixed(1)}`;
+        document.getElementById('cameraRotation').textContent = 
+            `${rotation.x.toFixed(2)}, ${rotation.y.toFixed(2)}, ${rotation.z.toFixed(2)}`;
+    }
 }
