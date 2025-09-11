@@ -11,8 +11,6 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 camera.position.set(0, 6.5, 7);
 // Remove initial rotation setting - will set it after OrbitControls
 
-
-
 // Store initial camera position for reset (will update after OrbitControls setup)
 let initialCameraPosition;
 let initialCameraRotation;
