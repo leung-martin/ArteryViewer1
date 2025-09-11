@@ -222,7 +222,8 @@ controls.minDistance = 5;
 controls.maxDistance = 20;
 
 // Set initial camera position and target
-camera.position.set(-2, 5, 4); // Set initial camera position
+camera.position.set(-1.5, 5, 4); // Set initial camera position
+
 controls.target.set(0, 4, 0); // Look at the center of the arterial structures
 controls.update(); // Apply the changes
 
