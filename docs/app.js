@@ -9,7 +9,7 @@ scene.background = new THREE.Color(0x2a2a2a);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 5, 5);
-camera.rotation.set(0, 0, 0);
+camera.rotation.set(-0.4, 0, 0); // Rotate upwards by about 17 degrees
 
 // Store initial camera position for reset
 const initialCameraPosition = camera.position.clone();
@@ -24,6 +24,13 @@ let arteryRadius = 0.04;
 let arteryHeight = 4;
 const arterySegments = 32;
 let arteryZ = -0.8;
+
+// Cache for individual artery properties
+const arteryCache = {
+    A: { radius: 0.04, height: 4, z: -0.8 },
+    B: { radius: 0.04, height: 4, z: -0.8 },
+    C: { radius: 0.04, height: 4, z: -0.8 }
+};
 
 // Materials
 const aArteryMaterial = new THREE.MeshPhongMaterial({ color: 0x8b0000, flatShading: true }); // Dark red
@@ -64,39 +71,38 @@ function createArteries() {
     originalMaterial = null;
 
     // A Arteries: two parallel vertical veins shaped like brackets ) (
-
     const aArteryFullPath2 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-0.6, 6.5, arteryZ + 0.5),
-        new THREE.Vector3(-0.3, 6, arteryZ + 0.6),
-        new THREE.Vector3(-0.3, 5.5, arteryZ + 0.7),
-        new THREE.Vector3(-0.3, 5, arteryZ + 0.8),
-        new THREE.Vector3(-0.6, 4.5, arteryZ + 0.9)
+        new THREE.Vector3(-0.6, 6.5, arteryCache.A.z + 0.5),
+        new THREE.Vector3(-0.3, 6, arteryCache.A.z + 0.6),
+        new THREE.Vector3(-0.3, 5.5, arteryCache.A.z + 0.7),
+        new THREE.Vector3(-0.3, 5, arteryCache.A.z + 0.8),
+        new THREE.Vector3(-0.6, 4.5, arteryCache.A.z + 0.9)
     ]);
 
     const aArteryFullPath1 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(0.6, 6.5, arteryZ + 0.5),
-        new THREE.Vector3(0.3, 6, arteryZ + 0.6),
-        new THREE.Vector3(0.3, 5.5, arteryZ + 0.7),
-        new THREE.Vector3(0.3, 5, arteryZ + 0.8),
-        new THREE.Vector3(0.6, 4.5, arteryZ + 0.9)
+        new THREE.Vector3(0.6, 6.5, arteryCache.A.z + 0.5),
+        new THREE.Vector3(0.3, 6, arteryCache.A.z + 0.6),
+        new THREE.Vector3(0.3, 5.5, arteryCache.A.z + 0.7),
+        new THREE.Vector3(0.3, 5, arteryCache.A.z + 0.8),
+        new THREE.Vector3(0.6, 4.5, arteryCache.A.z + 0.9)
     ]);
 
     // C Artery: horizontal vein with M shape, offset in y
     const cArteryFullPath = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-1, 4, arteryZ),
-        new THREE.Vector3(-0.5, 4.1, arteryZ + 1.8),
-        new THREE.Vector3(0, 4, arteryZ + 2),
-        new THREE.Vector3(0.5, 4.1, arteryZ + 1.8),
-        new THREE.Vector3(1, 4, arteryZ)
+        new THREE.Vector3(-1, 4, arteryCache.C.z),
+        new THREE.Vector3(-0.5, 4.1, arteryCache.C.z + 1.8),
+        new THREE.Vector3(0, 4, arteryCache.C.z + 2),
+        new THREE.Vector3(0.5, 4.1, arteryCache.C.z + 1.8),
+        new THREE.Vector3(1, 4, arteryCache.C.z)
     ]);
 
     // B Artery: horizontal vein with M shape
     const bArteryFullPath = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-2, 2.5, arteryZ - 0.2),
-        new THREE.Vector3(-1, 2.6, arteryZ + 0.1),
-        new THREE.Vector3(0, 2.5, arteryZ + 0.4),
-        new THREE.Vector3(1, 2.6, arteryZ + 0.1),
-        new THREE.Vector3(2, 2.5, arteryZ - 0.2)
+        new THREE.Vector3(-2, 2.5, arteryCache.B.z - 0.2),
+        new THREE.Vector3(-1, 2.6, arteryCache.B.z + 0.1),
+        new THREE.Vector3(0, 2.5, arteryCache.B.z + 0.4),
+        new THREE.Vector3(1, 2.6, arteryCache.B.z + 0.1),
+        new THREE.Vector3(2, 2.5, arteryCache.B.z - 0.2)
     ]);
 
 
@@ -124,19 +130,19 @@ function createArteries() {
         return new THREE.CatmullRomCurve3(partialPoints);
     }
 
-    const aArteryPath1 = getPartialCurve(aArteryFullPath1, arteryHeight);
-    const aArteryPath2 = getPartialCurve(aArteryFullPath2, arteryHeight);
-    const bArteryPath = getPartialCurve(bArteryFullPath, arteryHeight);
-    const cArteryPath = getPartialCurve(cArteryFullPath, arteryHeight);
+    const aArteryPath1 = getPartialCurve(aArteryFullPath1, arteryCache.A.height);
+    const aArteryPath2 = getPartialCurve(aArteryFullPath2, arteryCache.A.height);
+    const bArteryPath = getPartialCurve(bArteryFullPath, arteryCache.B.height);
+    const cArteryPath = getPartialCurve(cArteryFullPath, arteryCache.C.height);
 
     // TubeGeometry for veins
     const veinSegments = 64;
     const aArteryMesh1 = new THREE.Mesh(
-        new THREE.TubeGeometry(aArteryPath1, veinSegments, arteryRadius, arterySegments, false),
+        new THREE.TubeGeometry(aArteryPath1, veinSegments, arteryCache.A.radius, arterySegments, false),
         aArteryMaterial
     );
     const aArteryMesh2 = new THREE.Mesh(
-        new THREE.TubeGeometry(aArteryPath2, veinSegments, arteryRadius, arterySegments, false),
+        new THREE.TubeGeometry(aArteryPath2, veinSegments, arteryCache.A.radius, arterySegments, false),
         aArteryMaterial
     );
     aArtery = [aArteryMesh1, aArteryMesh2];
@@ -144,13 +150,13 @@ function createArteries() {
     scene.add(aArteryMesh2);
 
     bArtery = new THREE.Mesh(
-        new THREE.TubeGeometry(bArteryPath, veinSegments, arteryRadius, arterySegments, false),
+        new THREE.TubeGeometry(bArteryPath, veinSegments, arteryCache.B.radius, arterySegments, false),
         bArteryMaterial
     );
     scene.add(bArtery);
 
     cArtery = new THREE.Mesh(
-        new THREE.TubeGeometry(cArteryPath, veinSegments, arteryRadius, arterySegments, false),
+        new THREE.TubeGeometry(cArteryPath, veinSegments, arteryCache.C.radius, arterySegments, false),
         cArteryMaterial
     );
     scene.add(cArtery);
@@ -168,6 +174,8 @@ function createArteries() {
             selectedArteryDisplay.textContent = 'Selected: A Arteries';
             selectedArteryDisplay.style.display = 'block';
             document.getElementById('sliders').style.display = 'block';
+            // Update sliders to A artery's cached values
+            updateSlidersFromCache('A');
         } else if (currentSelection === 'B') {
             selectedArtery = bArtery;
             originalMaterial = bArtery.material;
@@ -175,6 +183,8 @@ function createArteries() {
             selectedArteryDisplay.textContent = 'Selected: B Artery';
             selectedArteryDisplay.style.display = 'block';
             document.getElementById('sliders').style.display = 'block';
+            // Update sliders to B artery's cached values
+            updateSlidersFromCache('B');
         } else if (currentSelection === 'C') {
             selectedArtery = cArtery;
             originalMaterial = cArtery.material;
@@ -182,6 +192,8 @@ function createArteries() {
             selectedArteryDisplay.textContent = 'Selected: C Artery';
             selectedArteryDisplay.style.display = 'block';
             document.getElementById('sliders').style.display = 'block';
+            // Update sliders to C artery's cached values
+            updateSlidersFromCache('C');
         }
     }
 }
@@ -209,18 +221,45 @@ const diameterSlider = document.getElementById('diameterSlider');
 const lengthSlider = document.getElementById('lengthSlider');
 const zSlider = document.getElementById('zSlider');
 
+// Function to update sliders from cache
+function updateSlidersFromCache(arteryType) {
+    const cache = arteryCache[arteryType];
+    diameterSlider.value = cache.radius;
+    lengthSlider.value = cache.height;
+    zSlider.value = cache.z;
+}
+
+// Function to update cache and current values from sliders
+function updateCacheFromSliders() {
+    let currentSelection = null;
+    if (selectedArtery === aArtery) currentSelection = 'A';
+    else if (selectedArtery === bArtery) currentSelection = 'B';
+    else if (selectedArtery === cArtery) currentSelection = 'C';
+    
+    if (currentSelection) {
+        arteryCache[currentSelection].radius = parseFloat(diameterSlider.value);
+        arteryCache[currentSelection].height = parseFloat(lengthSlider.value);
+        arteryCache[currentSelection].z = parseFloat(zSlider.value);
+        
+        // Update global variables for compatibility
+        arteryRadius = arteryCache[currentSelection].radius;
+        arteryHeight = arteryCache[currentSelection].height;
+        arteryZ = arteryCache[currentSelection].z;
+    }
+}
+
 diameterSlider.addEventListener('input', function() {
-    arteryRadius = parseFloat(this.value);
+    updateCacheFromSliders();
     createArteries();
 });
 
 lengthSlider.addEventListener('input', function() {
-    arteryHeight = parseFloat(this.value);
+    updateCacheFromSliders();
     createArteries();
 });
 
 zSlider.addEventListener('input', function() {
-    arteryZ = parseFloat(this.value);
+    updateCacheFromSliders();
     createArteries();
 });
 
@@ -349,8 +388,9 @@ function onMouseClick(event) {
                     console.log('Selected: A Arteries');
                     selectedArteryDisplay.textContent = 'Selected: A Arteries';
                     selectedArteryDisplay.style.display = 'block';
-                    // Show sliders menu
+                    // Show sliders menu and update to A artery's cached values
                     document.getElementById('sliders').style.display = 'block';
+                    updateSlidersFromCache('A');
                 } else if (newSelection === 'B') {
                     // Select B artery
                     selectedArtery = bArtery;
@@ -359,8 +399,9 @@ function onMouseClick(event) {
                     console.log('Selected: B Artery');
                     selectedArteryDisplay.textContent = 'Selected: B Artery';
                     selectedArteryDisplay.style.display = 'block';
-                    // Show sliders menu
+                    // Show sliders menu and update to B artery's cached values
                     document.getElementById('sliders').style.display = 'block';
+                    updateSlidersFromCache('B');
                 } else if (newSelection === 'C') {
                     // Select C artery
                     selectedArtery = cArtery;
@@ -369,8 +410,9 @@ function onMouseClick(event) {
                     console.log('Selected: C Artery');
                     selectedArteryDisplay.textContent = 'Selected: C Artery';
                     selectedArteryDisplay.style.display = 'block';
-                    // Show sliders menu
+                    // Show sliders menu and update to C artery's cached values
                     document.getElementById('sliders').style.display = 'block';
+                    updateSlidersFromCache('C');
                 }
             }
         }
