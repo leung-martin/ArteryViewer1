@@ -223,7 +223,7 @@ controls.minDistance = 5;
 controls.maxDistance = 20;
 
 // Set the target to look at the center of the arteries (they're positioned around Y=4.5)
-controls.target.set(0, 4, 0); // Look at the center of the arterial structures
+controls.target.set(-2, 4, 0); // Look at the center of the arterial structures
 controls.update(); // Apply the target change
 
 // Store initial state after OrbitControls setup
