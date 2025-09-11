@@ -221,7 +221,7 @@ controls.maxDistance = 20;
 
 // Slider controls
 const diameterSlider = document.getElementById('diameterSlider');
-const lengthSlider = document.getElementById('lengthSlider';
+const lengthSlider = document.getElementById('lengthSlider');
 const zSlider = document.getElementById('zSlider');
 
 // Function to update sliders from cache
