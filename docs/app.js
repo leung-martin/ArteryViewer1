@@ -200,9 +200,6 @@ function createArteries() {
 
 createArteries();
 
-// Initialize slider value displays
-updateSliderValueDisplays();
-
 // Add lights
 const ambientLight = new THREE.AmbientLight(0x404040);
 scene.add(ambientLight);
@@ -223,6 +220,9 @@ controls.maxDistance = 20;
 const diameterSlider = document.getElementById('diameterSlider');
 const lengthSlider = document.getElementById('lengthSlider');
 const zSlider = document.getElementById('zSlider');
+
+// Initialize slider value displays (moved here after slider declarations)
+updateSliderValueDisplays();
 
 // Function to update sliders from cache
 function updateSlidersFromCache(arteryType) {
